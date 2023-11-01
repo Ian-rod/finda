@@ -3,30 +3,24 @@ import 'package:location/location.dart';
 
 //request location permission
 Future<void> requestPermission() async {
-  Location location = Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
 
-  _serviceEnabled = await location.serviceEnabled();
+  _serviceEnabled = await Constants.location.serviceEnabled();
   if (!_serviceEnabled) {
-    _serviceEnabled = await location.requestService();
+    _serviceEnabled = await Constants.location.requestService();
     if (!_serviceEnabled) {
       return;
     }
   }
 
-  _permissionGranted = await location.hasPermission();
+  _permissionGranted = await Constants.location.hasPermission();
   if (_permissionGranted == PermissionStatus.denied) {
-    _permissionGranted = await location.requestPermission();
+    _permissionGranted = await Constants.location.requestPermission();
     if (_permissionGranted != PermissionStatus.granted) {
       return;
     }
   }
-  location.enableBackgroundMode(enable: true);
-  Constants.currentlocation = await location.getLocation();
-  //update location when changed
-  location.onLocationChanged.listen((LocationData currentLocation) {
-    // Use current location
-    Constants.currentlocation = currentLocation;
-  });
+
+  Constants.currentlocation = await Constants.location.getLocation();
 }

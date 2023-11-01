@@ -9,8 +9,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  //update the current location
   @override
   Widget build(BuildContext context) {
+    Constants.location.onLocationChanged.listen((currentLocation) {
+      setState(() {
+        print("Location changed");
+        Constants.currentlocation = currentLocation;
+      });
+    });
     return Scaffold(
       body: Center(
           child: Text(
