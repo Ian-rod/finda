@@ -7,4 +7,5 @@ class Constants {
   static var currentlocation;
   //the global location store
   static Location location = Location();
+  static late WidgetsFlutterBinding binding;
 }

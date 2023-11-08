@@ -21,6 +21,20 @@ Widget mydrawer(BuildContext context) {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: ListTile(
+              leading: Icon(Icons.home, color: Colors.white),
+              title: Text(
+                "Home",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                //navigate to location history page
+                Navigator.pushReplacementNamed(context, "/");
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListTile(
               leading: Icon(Icons.location_history, color: Colors.white),
               title: Text(
                 "Location history",
@@ -41,6 +55,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to geofence page
+                Navigator.pushReplacementNamed(context, "/geofence");
               },
             ),
           ),
