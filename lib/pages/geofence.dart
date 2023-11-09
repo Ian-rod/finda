@@ -3,9 +3,10 @@
 import 'package:finda/constants/constants.dart';
 import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/pages/mydrawer.dart';
+import 'package:finda/requests/notificationrequests.dart';
+import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
-import 'package:wheel_chooser/wheel_chooser.dart';
 
 class GeoFence extends StatefulWidget {
   const GeoFence({super.key});
@@ -16,6 +17,7 @@ class GeoFence extends StatefulWidget {
 
 class _GeoFenceState extends State<GeoFence> {
   var geofenceradius;
+
   String textRadius = "20m";
   var itemindex;
   //Geofence request
@@ -25,23 +27,27 @@ class _GeoFenceState extends State<GeoFence> {
       GeofenceRadius geofenceRadius,
       GeofenceStatus geofenceStatus,
       Location location) async {
-    print('geofence: ${geofence.toJson()}');
-    print('geofenceRadius: ${geofenceRadius.toJson()}');
-    print('geofenceStatus: ${geofenceStatus.toString()}');
+    String message = "Entering geofence";
+    if (geofenceStatus == GeofenceStatus.DWELL) {
+      message = "Dwelling within geofence";
+    } else if (geofenceStatus == GeofenceStatus.EXIT) {
+      message = "Exiting geofence";
+    }
+    await showNotification(message);
     var _geofenceStreamController;
     _geofenceStreamController.sink.add(geofence);
   }
 
 // This function is to be called when the activity has changed.
-  void _onActivityChanged(Activity prevActivity, Activity currActivity) {
-    print('prevActivity: ${prevActivity.toJson()}');
-    print('currActivity: ${currActivity.toJson()}');
+  void _onActivityChanged(Activity prevActivity, Activity currActivity) async {
+    await showNotification(
+        "previous Activity: ${prevActivity.toJson()}\n current Activity: ${currActivity.toJson()}");
     var _activityStreamController;
     _activityStreamController.sink.add(currActivity);
   }
 
 // This function is to be called when the location has changed.
-  void _onLocationChanged(Location location) {
+  void _onLocationChanged(Location location) async {
     print('location: ${location.toJson()}');
   }
 
@@ -65,6 +71,7 @@ class _GeoFenceState extends State<GeoFence> {
   @override
   void initState() {
     super.initState();
+
     Constants.binding.addPostFrameCallback((_) {
       GeoFenceConstants.geofenceService
           .addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
@@ -198,10 +205,15 @@ class _GeoFenceState extends State<GeoFence> {
                                         ],
                                       ));
                                     });
-
                                     Navigator.of(context).pop();
                                     placeId.clear();
                                     //save records
+                                    //save data to local storage and show sucess message
+                                    await savedata().then((value) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                              SnackBar(content: Text(value)));
+                                    });
                                   }
                                 },
                                 child: Text("Save geofence")),
@@ -334,6 +346,12 @@ class _GeoFenceState extends State<GeoFence> {
                                     Navigator.of(context).pop();
                                     placeId.clear();
                                     //save records
+                                    //save data to local storage and show sucess message
+                                    await savedata().then((value) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                              SnackBar(content: Text(value)));
+                                    });
                                   }
                                 },
                                 child: Text("Save geofence")),
@@ -364,7 +382,7 @@ class _GeoFenceState extends State<GeoFence> {
       ),
       iosNotificationOptions: const IOSNotificationOptions(),
       foregroundTaskOptions: const ForegroundTaskOptions(),
-      notificationTitle: 'Geofence Service is running',
+      notificationTitle: "Geofence Service is running",
       notificationText: 'Tap to return to the app',
       child: Scaffold(
         appBar: appbar,

@@ -2,8 +2,10 @@ import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
 import 'package:finda/requests/locationrequests.dart';
+import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   Constants.binding = WidgetsFlutterBinding();
@@ -18,6 +20,8 @@ void main() async {
     openAppSettings(); // Open app settings for the user to change the permission manually.
   }
   await requestPermission();
+  await getdata();
+
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
     100: Color.fromRGBO(208, 17, 119, 0.2),
