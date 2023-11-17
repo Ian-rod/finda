@@ -26,3 +26,5 @@ Future<void> requestPermission() async {
 
   Constants.currentlocation = await Constants.location.getLocation();
 }
+
+//start geofence service

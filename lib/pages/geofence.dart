@@ -3,7 +3,6 @@
 import 'package:finda/constants/constants.dart';
 import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/pages/mydrawer.dart';
-import 'package:finda/requests/notificationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
@@ -20,72 +19,10 @@ class _GeoFenceState extends State<GeoFence> {
 
   String textRadius = "20m";
   var itemindex;
-  //Geofence request
-  // This function is to be called when the geofence status is changed.
-  Future<void> _onGeofenceStatusChanged(
-      Geofence geofence,
-      GeofenceRadius geofenceRadius,
-      GeofenceStatus geofenceStatus,
-      Location location) async {
-    String message = "Entering geofence";
-    if (geofenceStatus == GeofenceStatus.DWELL) {
-      message = "Dwelling within geofence";
-    } else if (geofenceStatus == GeofenceStatus.EXIT) {
-      message = "Exiting geofence";
-    }
-    await showNotification(message);
-    var _geofenceStreamController;
-    _geofenceStreamController.sink.add(geofence);
-  }
-
-// This function is to be called when the activity has changed.
-  void _onActivityChanged(Activity prevActivity, Activity currActivity) async {
-    await showNotification(
-        "previous Activity: ${prevActivity.toJson()}\n current Activity: ${currActivity.toJson()}");
-    var _activityStreamController;
-    _activityStreamController.sink.add(currActivity);
-  }
-
-// This function is to be called when the location has changed.
-  void _onLocationChanged(Location location) async {
-    print('location: ${location.toJson()}');
-  }
-
-// This function is to be called when a location services status change occurs
-// since the service was started.
-  void _onLocationServicesStatusChanged(bool status) {
-    print('isLocationServicesEnabled: $status');
-  }
-
-// This function is used to handle errors that occur in the service.
-  void _onError(error) {
-    final errorCode = getErrorCodesFromError(error);
-    if (errorCode == null) {
-      print('Undefined error: $error');
-      return;
-    }
-
-    print('ErrorCode: $errorCode');
-  }
 
   @override
   void initState() {
     super.initState();
-
-    Constants.binding.addPostFrameCallback((_) {
-      GeoFenceConstants.geofenceService
-          .addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-      GeoFenceConstants.geofenceService
-          .addLocationChangeListener(_onLocationChanged);
-      GeoFenceConstants.geofenceService.addLocationServicesStatusChangeListener(
-          _onLocationServicesStatusChanged);
-      GeoFenceConstants.geofenceService
-          .addActivityChangeListener(_onActivityChanged);
-      GeoFenceConstants.geofenceService.addStreamErrorListener(_onError);
-      GeoFenceConstants.geofenceService
-          .start(GeoFenceConstants.geofenceList)
-          .catchError(_onError);
-    });
   }
 
   var formKey = GlobalKey<FormState>();
@@ -136,26 +73,10 @@ class _GeoFenceState extends State<GeoFence> {
                                     value: textRadius,
                                     hint: Text(
                                         "Select the radius of the geofence"),
-                                    items: [
-                                      DropdownMenuItem(
-                                          child: Text("20m"), value: "20m"),
-                                      DropdownMenuItem(
-                                          child: Text("50m"), value: "50m"),
-                                      DropdownMenuItem(
-                                        child: Text("100m"),
-                                        value: "100m",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("150m"),
-                                        value: "150m",
-                                      ),
-                                      DropdownMenuItem(
-                                          child: Text("200m"), value: "200m"),
-                                      DropdownMenuItem(
-                                        child: Text("250m"),
-                                        value: "250m",
-                                      ),
-                                    ],
+                                    items: GeoFenceConstants.geoRadius.map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
                                     onChanged: (value) {
                                       setState(() {
                                         textRadius = value!;
@@ -271,26 +192,10 @@ class _GeoFenceState extends State<GeoFence> {
                                     value: textRadius,
                                     hint: Text(
                                         "Select the radius of the geofence"),
-                                    items: [
-                                      DropdownMenuItem(
-                                          child: Text("20m"), value: "20m"),
-                                      DropdownMenuItem(
-                                          child: Text("50m"), value: "50m"),
-                                      DropdownMenuItem(
-                                        child: Text("100m"),
-                                        value: "100m",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("150m"),
-                                        value: "150m",
-                                      ),
-                                      DropdownMenuItem(
-                                          child: Text("200m"), value: "200m"),
-                                      DropdownMenuItem(
-                                        child: Text("250m"),
-                                        value: "250m",
-                                      ),
-                                    ],
+                                    items: GeoFenceConstants.geoRadius.map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
                                     onChanged: (value) {
                                       setState(() {
                                         textRadius = value!;
@@ -365,124 +270,103 @@ class _GeoFenceState extends State<GeoFence> {
 
   @override
   Widget build(BuildContext context) {
-    return WillStartForegroundTask(
-      onWillStart: () async {
-        // You can add a foreground task start condition.
-
-        return GeoFenceConstants.geofenceService.isRunningService;
-      },
-      androidNotificationOptions: AndroidNotificationOptions(
-        channelId: 'geofence_service_notification_channel',
-        channelName: 'Geofence Service Notification',
-        channelDescription:
-            'This notification appears when the geofence service is running in the background.',
-        channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW,
-        isSticky: false,
-      ),
-      iosNotificationOptions: const IOSNotificationOptions(),
-      foregroundTaskOptions: const ForegroundTaskOptions(),
-      notificationTitle: "Geofence Service is running",
-      notificationText: 'Tap to return to the app',
-      child: Scaffold(
-        appBar: appbar,
-        drawer: mydrawer(context),
-        body: GeoFenceConstants.geofenceList.isEmpty
-            ? Center(child: Text("No geofences set press + to add a geofence"))
-            : Center(
-                child: ListView.builder(
-                  itemCount: GeoFenceConstants.geofenceList.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(
-                        onTap: () {
-                          //edit geofence
-                          itemindex = index;
-                          placeId.text =
-                              GeoFenceConstants.geofenceList[index].id;
-                          editgeofence(context);
-                        },
-                        onLongPress: () {
-                          //delete geofence
-                          itemindex = index;
-                          //delete event
-                          //call confirmation box
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Row(children: [
-                                    Text("Confirm delete"),
-                                    SizedBox(
-                                      width: 7,
-                                    ),
-                                    Icon(Icons.delete_forever)
-                                  ]),
-                                  content: Text(
-                                      "Are you sure you want to delete the selected Geofence?"),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () async {
-                                          //perform delete
-                                          setState(() {
-                                            GeoFenceConstants.geofenceList
-                                                .removeAt(index);
-                                          });
-                                          Navigator.of(context).pop();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  backgroundColor:
-                                                      Constants.appcolor,
-                                                  content: Row(
-                                                    children: [
-                                                      Text("Geofence deleted"),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Icon(
-                                                        Icons.delete_forever,
-                                                        color: Colors.white,
-                                                      )
-                                                    ],
-                                                  )));
-                                        },
-                                        child: Text("Yes")),
-                                    TextButton(
-                                        onPressed: () {
-                                          //close dialog
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text("No"))
-                                  ],
-                                );
-                              });
-                          //confirm delete
-                          //delete then save
-                        },
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Constants.appcolor,
-                            child: Icon(
-                              Icons.location_on_outlined,
-                              color: Colors.white,
-                            ),
+    return Scaffold(
+      appBar: appbar,
+      drawer: mydrawer(context),
+      body: GeoFenceConstants.geofenceList.isEmpty
+          ? Center(child: Text("No geofences set press + to add a geofence"))
+          : Center(
+              child: ListView.builder(
+                itemCount: GeoFenceConstants.geofenceList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: InkWell(
+                      onTap: () {
+                        //edit geofence
+                        itemindex = index;
+                        placeId.text = GeoFenceConstants.geofenceList[index].id;
+                        editgeofence(context);
+                      },
+                      onLongPress: () {
+                        //delete geofence
+                        itemindex = index;
+                        //delete event
+                        //call confirmation box
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Row(children: [
+                                  Text("Confirm delete"),
+                                  SizedBox(
+                                    width: 7,
+                                  ),
+                                  Icon(Icons.delete_forever)
+                                ]),
+                                content: Text(
+                                    "Are you sure you want to delete the selected Geofence?"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () async {
+                                        //perform delete
+                                        setState(() {
+                                          GeoFenceConstants.geofenceList
+                                              .removeAt(index);
+                                        });
+                                        Navigator.of(context).pop();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                backgroundColor:
+                                                    Constants.appcolor,
+                                                content: Row(
+                                                  children: [
+                                                    Text("Geofence deleted"),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Icon(
+                                                      Icons.delete_forever,
+                                                      color: Colors.white,
+                                                    )
+                                                  ],
+                                                )));
+                                      },
+                                      child: Text("Yes")),
+                                  TextButton(
+                                      onPressed: () {
+                                        //close dialog
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("No"))
+                                ],
+                              );
+                            });
+                        //confirm delete
+                        //delete then save
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Constants.appcolor,
+                          child: Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.white,
                           ),
-                          title: Text(GeoFenceConstants.geofenceList[index].id),
                         ),
+                        title: Text(GeoFenceConstants.geofenceList[index].id),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: Constants.appcolor,
-            child: Icon(Icons.add),
-            onPressed: () {
-              //trigger add geofence
-              addgeofence(context);
-            }),
-      ),
+            ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Constants.appcolor,
+          child: Icon(Icons.add),
+          onPressed: () {
+            //trigger add geofence
+            addgeofence(context);
+          }),
     );
   }
 }

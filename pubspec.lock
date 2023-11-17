@@ -26,7 +26,7 @@ packages:
     source: hosted
     version: "2.1.1"
   cached_network_image:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: cached_network_image
       sha256: f98972704692ba679db144261172a8e20feb145636c617af0eb4022132a6797f
@@ -183,7 +183,7 @@ packages:
     source: hosted
     version: "2.0.3"
   flutter_local_notifications:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_local_notifications
       sha256: "6d11ea777496061e583623aaf31923f93a9409ef8fcaeeefdd6cd78bf4fe5bb3"
@@ -217,7 +217,7 @@ packages:
     source: sdk
     version: "0.0.0"
   geofence_service:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: geofence_service
       sha256: "44126fab9f072b08b7ff03774b570f34828b2d4ae5f500a4734337c5e9fc2d89"
@@ -257,7 +257,7 @@ packages:
     source: hosted
     version: "2.1.1"
   location:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: location
       sha256: "06be54f682c9073cbfec3899eb9bc8ed90faa0e17735c9d9fa7fe426f5be1dd1"
@@ -369,7 +369,7 @@ packages:
     source: hosted
     version: "2.2.1"
   permission_handler:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: permission_handler
       sha256: "284a66179cabdf942f838543e10413246f06424d960c92ba95c84439154fcac8"
