@@ -94,6 +94,9 @@ class _HomeState extends State<Home> {
     //geofence trigger
     if (geofenceOn) {
       startGeofence();
+    } else {
+      //stop geofence
+      GeofenceService.instance.stop();
     }
     Constants.location.onLocationChanged.listen((currentLocation) {
       print("speed is : " + currentLocation.speed.toString());
