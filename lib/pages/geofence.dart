@@ -121,9 +121,7 @@ class _GeoFenceState extends State<GeoFence> {
                                             Constants.currentlocation.latitude,
                                         longitude:
                                             Constants.currentlocation.longitude,
-                                        radius: [
-                                          geofenceradius,
-                                        ],
+                                        radius: [geofenceradius],
                                       ));
                                     });
                                     Navigator.of(context).pop();
@@ -314,23 +312,13 @@ class _GeoFenceState extends State<GeoFence> {
                                           GeoFenceConstants.geofenceList
                                               .removeAt(index);
                                         });
-                                        Navigator.of(context).pop();
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                backgroundColor:
-                                                    Constants.appcolor,
-                                                content: Row(
-                                                  children: [
-                                                    Text("Geofence deleted"),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Icon(
-                                                      Icons.delete_forever,
-                                                      color: Colors.white,
-                                                    )
-                                                  ],
-                                                )));
+                                        //save
+                                        await savedata().then((value) {
+                                          Navigator.of(context).pop();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(value)));
+                                        });
                                       },
                                       child: Text("Yes")),
                                   TextButton(

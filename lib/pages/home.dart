@@ -28,6 +28,8 @@ class _HomeState extends State<Home> {
     } else if (geofenceStatus == GeofenceStatus.EXIT) {
       message = "Exiting ${geofence.id} geofence";
     }
+    message =
+        "$message remaining distance is ${geofenceRadius.remainingDistance.toString()} radius is ${geofenceRadius.length}";
     await showNotification(message);
 
     var _geofenceStreamController;
@@ -97,6 +99,18 @@ class _HomeState extends State<Home> {
     } else {
       //stop geofence
       GeofenceService.instance.stop();
+      GeoFenceConstants.geofenceService
+          .removeGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+      GeoFenceConstants.geofenceService
+          .removeLocationChangeListener(_onLocationChanged);
+      GeoFenceConstants.geofenceService
+          .removeLocationServicesStatusChangeListener(
+              _onLocationServicesStatusChanged);
+      GeoFenceConstants.geofenceService
+          .removeActivityChangeListener(_onActivityChanged);
+      GeoFenceConstants.geofenceService.removeStreamErrorListener(_onError);
+      GeoFenceConstants.geofenceService.clearAllListeners();
+      GeoFenceConstants.geofenceService.stop();
     }
     Constants.location.onLocationChanged.listen((currentLocation) {
       print("speed is : " + currentLocation.speed.toString());

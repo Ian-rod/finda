@@ -19,19 +19,21 @@ Future<void> getdata() async {
         // var tempmap = jsonDecode(element);
         // print(element['placeid']);
         var geofenceradius;
-        if (element['radius'] == "20m") {
+        print("Input Radius is ${element['radius']}");
+        if (element['radius'] == "20.0") {
           geofenceradius = GeofenceRadius(id: 'radius_20m', length: 20);
-        } else if (element['radius'] == "50m") {
+        } else if (element['radius'] == "50.0") {
           geofenceradius = GeofenceRadius(id: 'radius_50m', length: 50);
-        } else if (element['radius'] == "100m") {
+        } else if (element['radius'] == "100.0") {
           geofenceradius = GeofenceRadius(id: 'radius_100m', length: 100);
-        } else if (element['radius'] == "150m") {
+        } else if (element['radius'] == "150.0") {
           geofenceradius = GeofenceRadius(id: 'radius_150m', length: 150);
-        } else if (element['radius'] == "200m") {
+        } else if (element['radius'] == "200.0") {
           geofenceradius = GeofenceRadius(id: 'radius_200m', length: 200);
-        } else {
+        } else if (element['radius'] == "250.0") {
           geofenceradius = GeofenceRadius(id: 'radius_250m', length: 250);
         }
+        print("Output Radius is ${geofenceradius.length}");
         GeoFenceConstants.geofenceList.add(Geofence(
             id: element['placeid'],
             latitude: double.parse(element['latitude']),
@@ -48,7 +50,7 @@ Future<void> getdata() async {
 
 Future<String> savedata() async {
   prefs = await SharedPreferences.getInstance();
-  String returnmessage = "Geofence saved successfully";
+  String returnmessage = "Geofence changes saved successfully";
   try {
     //convert to list<String> then encode
     List<Map<String, String>> templist = [];
@@ -69,7 +71,6 @@ Future<String> savedata() async {
     await prefs.setString("geofencelist", jsonString);
   } catch (e) {
     returnmessage = e.toString();
-    print(e.toString());
   }
   return returnmessage;
 }
