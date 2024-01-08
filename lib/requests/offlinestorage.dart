@@ -19,7 +19,6 @@ Future<void> getdata() async {
         // var tempmap = jsonDecode(element);
         // print(element['placeid']);
         var geofenceradius;
-        print("Input Radius is ${element['radius']}");
         if (element['radius'] == "20.0") {
           geofenceradius = GeofenceRadius(id: 'radius_20m', length: 20);
         } else if (element['radius'] == "50.0") {
@@ -33,7 +32,6 @@ Future<void> getdata() async {
         } else if (element['radius'] == "250.0") {
           geofenceradius = GeofenceRadius(id: 'radius_250m', length: 250);
         }
-        print("Output Radius is ${geofenceradius.length}");
         GeoFenceConstants.geofenceList.add(Geofence(
             id: element['placeid'],
             latitude: double.parse(element['latitude']),

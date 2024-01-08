@@ -57,6 +57,13 @@ class _GeoFenceState extends State<GeoFence> {
                                 if (value == null || value.toString().isEmpty) {
                                   return "Please enter a unique name for the geofence";
                                 }
+                                //duplicate id check
+                                for (Geofence g
+                                    in GeoFenceConstants.geofenceList) {
+                                  if (g.id == value) {
+                                    return "Geofence name taken";
+                                  }
+                                }
                                 return null;
                               },
                               decoration: InputDecoration(
@@ -198,7 +205,7 @@ class _GeoFenceState extends State<GeoFence> {
                                       setState(() {
                                         textRadius = value!;
                                         Navigator.of(context).pop();
-                                        addgeofence(context);
+                                        editgeofence(context);
                                       });
                                       print(textRadius);
                                     })),
@@ -207,8 +214,6 @@ class _GeoFenceState extends State<GeoFence> {
                             padding: const EdgeInsets.all(10.0),
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  GeoFenceConstants.geofenceList
-                                      .removeAt(itemindex);
                                   //Save details
                                   if (formKey.currentState!.validate()) {
                                     //save geofence
@@ -233,6 +238,12 @@ class _GeoFenceState extends State<GeoFence> {
                                           id: 'radius_250m', length: 250);
                                     }
                                     setState(() {
+                                      //remove edited item
+                                      print(itemindex);
+                                      GeoFenceConstants.geofenceList
+                                          .removeAt(itemindex);
+
+                                      //add new values
                                       GeoFenceConstants.geofenceList
                                           .add(Geofence(
                                         id: placeId.text,
@@ -248,7 +259,8 @@ class _GeoFenceState extends State<GeoFence> {
 
                                     Navigator.of(context).pop();
                                     placeId.clear();
-                                    //save records
+
+                                    //save new  records
                                     //save data to local storage and show sucess message
                                     await savedata().then((value) {
                                       ScaffoldMessenger.of(context)
@@ -257,7 +269,7 @@ class _GeoFenceState extends State<GeoFence> {
                                     });
                                   }
                                 },
-                                child: Text("Save geofence")),
+                                child: Text("Save geofence changes")),
                           )
                         ],
                       ),

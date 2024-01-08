@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
@@ -32,16 +32,51 @@ class _HomeState extends State<Home> {
         "$message remaining distance is ${geofenceRadius.remainingDistance.toString()} radius is ${geofenceRadius.length}";
     await showNotification(message);
 
-    var _geofenceStreamController;
-    _geofenceStreamController.sink.add(geofence);
+    var geofenceStreamController;
+    geofenceStreamController.sink.add(geofence);
   }
 
+  var activityIcon;
+  String currentActivity = "Loading";
+  String previousActivity = "Loading";
+  String confidence = "0";
 // This function is to be called when the activity has changed.
   void _onActivityChanged(Activity prevActivity, Activity currActivity) async {
+    if (currActivity.type == ActivityType.STILL) {
+      activityIcon = Icons.attribution;
+      currentActivity = "Still";
+      previousActivity = prevActivity.type.name;
+      confidence = currActivity.confidence.name;
+    } else if (currActivity.type == ActivityType.RUNNING) {
+      activityIcon = Icons.run_circle_outlined;
+      currentActivity = "Running";
+      previousActivity = prevActivity.type.name;
+      confidence = currActivity.confidence.name;
+    } else if (currActivity.type == ActivityType.ON_BICYCLE) {
+      activityIcon = Icons.bike_scooter;
+      currentActivity = "Bicycle";
+      previousActivity = prevActivity.type.name;
+      confidence = currActivity.confidence.name;
+    } else if (currActivity.type == ActivityType.UNKNOWN) {
+      activityIcon = Icons.device_unknown;
+      currentActivity = "Unknown";
+      previousActivity = prevActivity.type.name;
+      confidence = currActivity.confidence.name;
+    } else if (currActivity.type == ActivityType.WALKING) {
+      activityIcon = Icons.directions_walk_outlined;
+      currentActivity = "Walking";
+      previousActivity = prevActivity.type.name;
+      confidence = currActivity.confidence.name;
+    } else {
+      activityIcon = Icons.car_repair;
+      currentActivity = "In vehicle";
+      previousActivity = prevActivity.type.name;
+      confidence = currActivity.confidence.name;
+    }
     // await showNotification(
     //     "previous Activity: ${prevActivity.toJson()}\n current Activity: ${currActivity.toJson()}");
-    var _activityStreamController;
-    _activityStreamController.sink.add(currActivity);
+    var activityStreamController;
+    activityStreamController.sink.add(currActivity);
   }
 
 // This function is to be called when the location has changed.
@@ -49,13 +84,13 @@ class _HomeState extends State<Home> {
     setState(() {
       Constants.currentlocation = location;
     });
-    print('location: ${location.toJson()}');
+    //  print('location: ${location.toJson()}');
   }
 
 // This function is to be called when a location services status change occurs
 // since the service was started.
   void _onLocationServicesStatusChanged(bool status) {
-    print('isLocationServicesEnabled: $status');
+    // print('isLocationServicesEnabled: $status');
   }
 
 // This function is used to handle errors that occur in the service.
@@ -66,7 +101,7 @@ class _HomeState extends State<Home> {
       return;
     }
 
-    print('ErrorCode: $errorCode');
+    //  print('ErrorCode: $errorCode');
   }
 
 //start geofence service
@@ -88,13 +123,13 @@ class _HomeState extends State<Home> {
   }
 
   //geofence switch trigger
-  bool geofenceOn = true;
+  bool geofenceOff = true;
 
   //update the current location
   @override
   Widget build(BuildContext context) {
     //geofence trigger
-    if (geofenceOn) {
+    if (geofenceOff) {
       startGeofence();
     } else {
       //stop geofence
@@ -113,7 +148,6 @@ class _HomeState extends State<Home> {
       GeoFenceConstants.geofenceService.stop();
     }
     Constants.location.onLocationChanged.listen((currentLocation) {
-      print("speed is : " + currentLocation.speed.toString());
       setState(() {
         Constants.currentlocation = currentLocation;
       });
@@ -165,11 +199,8 @@ class _HomeState extends State<Home> {
                         Positioned(
                             top: 80,
                             left: 70,
-                            child: Text("speed : " +
-                                Constants.currentlocation.speed
-                                    .toInt()
-                                    .toString() +
-                                " m/s"))
+                            child: Text(
+                                "speed : ${Constants.currentlocation.speed.toInt().toString()} m/s"))
                       ],
                     ),
                   ),
@@ -184,10 +215,8 @@ class _HomeState extends State<Home> {
                         Positioned(
                             bottom: 0,
                             left: 40,
-                            child: Text(Constants.currentlocation.latitude
-                                    .toString() +
-                                " , " +
-                                Constants.currentlocation.longitude.toString()))
+                            child: Text(
+                                "${Constants.currentlocation.latitude} , ${Constants.currentlocation.longitude}"))
                       ],
                     ),
                   ),
@@ -201,9 +230,8 @@ class _HomeState extends State<Home> {
                 Positioned(
                     top: 20,
                     left: 20,
-                    child: Text("Your altitude is " +
-                        Constants.currentlocation.altitude.toInt().toString() +
-                        " m"))
+                    child: Text(
+                        "Your altitude is ${Constants.currentlocation.altitude.toInt().toString()} m"))
               ]),
             ),
             //geofence switch
@@ -213,18 +241,78 @@ class _HomeState extends State<Home> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Switch(
-                        value: geofenceOn,
+                        value: geofenceOff,
                         activeColor: Constants.appcolor,
                         activeTrackColor: Constants.appcolor,
                         onChanged: (value) {
                           setState(() {
-                            geofenceOn = !geofenceOn;
+                            geofenceOff = !geofenceOff;
                           });
                         }),
                   ),
-                  Text(geofenceOn
+                  Text(geofenceOff
                       ? "Geofence service is on"
                       : "Geofence service is off")
+                ],
+              ),
+            ),
+            //add activity type
+            Center(
+              child: Card(
+                elevation: 10,
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Icon(
+                      activityIcon ?? Icons.question_mark,
+                      size: 50,
+                      color: Constants.appcolor,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text("Current activity: $currentActivity"),
+                    subtitle: Text("Previous activity: $previousActivity"),
+                    trailing: Text("Confidence level: $confidence"),
+                  )
+                ]),
+              ),
+            ),
+            //visibility status
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text("The above information is currently visible to"),
+              ),
+            ),
+            SizedBox(
+              height: 150,
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Card(
+                      elevation: 10,
+                      child: SizedBox(
+                        height: 150,
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Center(
+                          child: ListTile(
+                            onTap: () {
+                              //open trustee view details page
+                            },
+                            leading: CircleAvatar(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Constants.appcolor,
+                              child: Icon(Icons.person_2_rounded),
+                            ),
+                            title: Text("Bruce Lyken"),
+                            subtitle: Text("Primary"),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )

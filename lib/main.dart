@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
