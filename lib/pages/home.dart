@@ -3,6 +3,7 @@
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/requests/notificationrequests.dart';
@@ -124,11 +125,7 @@ class _HomeState extends State<Home> {
 
   //geofence switch trigger
   bool geofenceOff = true;
-
-  //update the current location
-  @override
-  Widget build(BuildContext context) {
-    //geofence trigger
+  geofenceSwitchController() {
     if (geofenceOff) {
       startGeofence();
     } else {
@@ -147,11 +144,37 @@ class _HomeState extends State<Home> {
       GeoFenceConstants.geofenceService.clearAllListeners();
       GeoFenceConstants.geofenceService.stop();
     }
+  }
+
+  //SOS trigger
+  bool suspiciousFlagOff = true;
+  var methodchannel = MethodChannel("STKchannel");
+
+  //control the suspicous flag
+  suspicousFlagController() {
+    if (geofenceOff && suspiciousFlagOff) {
+      //turn on the SOS Flag, prevent the stk
+      methodchannel.invokeMethod("preventSTKLaunch");
+    } else {
+      //switch off SOS flag
+      methodchannel.invokeMethod("enableSTKLaunch");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //geofence trigger
     Constants.location.onLocationChanged.listen((currentLocation) {
       setState(() {
         Constants.currentlocation = currentLocation;
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return WillStartForegroundTask(
       onWillStart: () async {
         // You can add a foreground task start condition.
@@ -248,11 +271,35 @@ class _HomeState extends State<Home> {
                           setState(() {
                             geofenceOff = !geofenceOff;
                           });
+                          geofenceSwitchController();
                         }),
                   ),
                   Text(geofenceOff
                       ? "Geofence service is on"
-                      : "Geofence service is off")
+                      : "Geofence service is off"),
+                ],
+              ),
+            ),
+            //Flag suspicuous switch
+            Center(
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Switch(
+                        value: geofenceOff && suspiciousFlagOff,
+                        activeColor: Constants.appcolor,
+                        activeTrackColor: Constants.appcolor,
+                        onChanged: (value) {
+                          setState(() {
+                            suspiciousFlagOff = !suspiciousFlagOff;
+                          });
+                          suspicousFlagController();
+                        }),
+                  ),
+                  Text(geofenceOff && suspiciousFlagOff
+                      ? "Flag suspicuous service is on"
+                      : "Flag suspicuous service is off"),
                 ],
               ),
             ),

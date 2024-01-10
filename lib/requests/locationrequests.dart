@@ -1,12 +1,12 @@
 import 'package:finda/constants/constants.dart';
 import 'package:finda/constants/geoconstants.dart';
-import 'package:location/location.dart' as locationPackage;
+import 'package:location/location.dart' as locationpackage;
 import 'package:geofence_service/geofence_service.dart';
 
 //request location permission
 Future<void> requestPermission() async {
   bool _serviceEnabled;
-  locationPackage.PermissionStatus _permissionGranted;
+  locationpackage.PermissionStatus _permissionGranted;
 
   _serviceEnabled = await Constants.location.serviceEnabled();
   if (!_serviceEnabled) {
@@ -17,9 +17,9 @@ Future<void> requestPermission() async {
   }
 
   _permissionGranted = await Constants.location.hasPermission();
-  if (_permissionGranted == locationPackage.PermissionStatus.denied) {
+  if (_permissionGranted == locationpackage.PermissionStatus.denied) {
     _permissionGranted = await Constants.location.requestPermission();
-    if (_permissionGranted != locationPackage.PermissionStatus.granted) {
+    if (_permissionGranted != locationpackage.PermissionStatus.granted) {
       return;
     }
   }
