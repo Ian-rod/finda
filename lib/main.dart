@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:finda/constants/constants.dart';
+import 'package:finda/pages/flagsuspicious.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
 import 'package:finda/requests/locationrequests.dart';
@@ -23,6 +24,7 @@ void main() async {
   }
   await requestPermission();
   await getdata();
+  await getsafezonedata();
 
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
@@ -39,8 +41,19 @@ void main() async {
   MaterialColor colorCustom = MaterialColor(0xFF013220, color);
   runApp(MaterialApp(
     title: "Finda",
-    theme:
-        ThemeData(primarySwatch: colorCustom, primaryColor: Constants.appcolor),
-    routes: {"/": (context) => Home(), "/geofence": (context) => GeoFence()},
+    theme: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Constants.appcolor),
+                foregroundColor: MaterialStatePropertyAll(Colors.white))),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+            foregroundColor: Colors.white, backgroundColor: Constants.appcolor),
+        primarySwatch: colorCustom,
+        primaryColor: Constants.appcolor),
+    routes: {
+      "/": (context) => Home(),
+      "/geofence": (context) => GeoFence(),
+      "/safezone": (context) => FlagSusupicious()
+    },
   ));
 }

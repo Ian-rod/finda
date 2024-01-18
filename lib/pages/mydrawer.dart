@@ -14,7 +14,7 @@ Widget mydrawer(BuildContext context) {
             margin: EdgeInsets.all(4),
             //TO CHECK LATER DEFINITION
             child: Image.asset(
-              "images/gps.jpeg",
+              "images/gps.png",
               fit: BoxFit.fill,
             ),
           ),
@@ -93,11 +93,12 @@ Widget mydrawer(BuildContext context) {
             child: ListTile(
               leading: Icon(Icons.flag_rounded, color: Colors.white),
               title: Text(
-                "Flag suspicious",
+                "Flag suspicious settings",
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                //navigate to Distress set up page
+                //navigate to flag susupicious set up page
+                Navigator.pushNamed(context, "/safezone");
               },
             ),
           )

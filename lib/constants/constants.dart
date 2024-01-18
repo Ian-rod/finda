@@ -8,4 +8,7 @@ class Constants {
   //the global location store
   static Location location = Location();
   static late WidgetsFlutterBinding binding;
+
+  //
+  static var safezone;
 }

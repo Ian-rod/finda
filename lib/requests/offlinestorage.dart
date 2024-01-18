@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:finda/constants/constants.dart';
 import 'package:finda/constants/geoconstants.dart';
+import 'package:finda/datamodel/safezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geofence_service/geofence_service.dart';
 
@@ -65,6 +67,7 @@ Future<String> savedata() async {
       };
       templist.add(data);
     }
+    //save safe area details
     var jsonString = jsonEncode(templist);
     await prefs.setString("geofencelist", jsonString);
   } catch (e) {
@@ -72,17 +75,43 @@ Future<String> savedata() async {
   }
   return returnmessage;
 }
-//delete events
-// Future<void> clearevents() async
-// {
-// prefs = await SharedPreferences.getInstance();
 
-// try{
-// await prefs.remove("geofencelist");
-// }
-// catch(e)
-// {
-//    print(e.toString());
-// }
+Future<String> saveSafezonedata() async {
+  prefs = await SharedPreferences.getInstance();
+  String returnmessage = "Safezone saved successfully";
+  try {
+    //convert to list<String> then encode
+    Map<String, String> tempdata = {
+      "geofenceName": Constants.safezone.geofenceName,
+      "longitude": Constants.safezone.longitude.toString(),
+      "latitude": Constants.safezone.latitude.toString(),
+      "radius": Constants.safezone.radius.toString(),
+    };
+    //save safe area details
+    var jsonString = jsonEncode(tempdata);
+    await prefs.setString("safezone", jsonString);
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+  return returnmessage;
+}
 
-// }
+Future<void> getsafezonedata() async {
+  var jsonString;
+  try {
+    prefs = await SharedPreferences.getInstance();
+    jsonString = prefs.getString("safezone");
+    if (jsonString != null) {
+      Map<String, dynamic> tempdata = json.decode(jsonString);
+      Constants.safezone = Safezone(
+          geofenceName: tempdata["geofenceName"]!,
+          longitude: double.parse(tempdata["longitude"]!),
+          latitude: double.parse(tempdata["latitude"]!),
+          radius: double.parse(tempdata["radius"]!));
+    }
+
+    //
+  } catch (e) {
+    print("RUN INTO EXCEPTION :" + e.toString());
+  }
+}

@@ -8,9 +8,9 @@ import android.widget.Toast
 class ForegroundAppService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event?.packageName == "com.android.stk") {
+        if (event?.packageName == "com.android.stk"&&LimitListConstant.shouldservicerun) {
             performGlobalAction(GLOBAL_ACTION_BACK)
-            showToast("Stk Launch prevented")
+            showToast("Currently in an unsafe location Stk Launch prevented ")
         }
     }
 
@@ -19,6 +19,6 @@ class ForegroundAppService : AccessibilityService() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     }
 }

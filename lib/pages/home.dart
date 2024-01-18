@@ -2,6 +2,7 @@
 
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
+import 'package:finda/requests/basicfunctionalityrequests.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geofence_service/geofence_service.dart';
@@ -153,24 +154,44 @@ class _HomeState extends State<Home> {
   //control the suspicous flag
   suspicousFlagController() {
     if (geofenceOff && suspiciousFlagOff) {
-      //turn on the SOS Flag, prevent the stk
-      methodchannel.invokeMethod("preventSTKLaunch");
+      //turn on the Suspicious Flag, prevent the stk
+      //pass location details to the method.....pass the entire georadius or just the centre and the radius length and do math
+      if (Constants.safezone != null) {
+        List<double> limitlist = getBoundingBox(Constants.safezone.latitude,
+            Constants.safezone.longitude, Constants.safezone.radius);
+        methodchannel.invokeMethod("setSafeZone", {
+          "maxLong": limitlist[3],
+          "minLong": limitlist[2],
+          "maxLat": limitlist[1],
+          "minLat": limitlist[0]
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                "Please set a safezone to flag activities outside your safezone")));
+      }
     } else {
-      //switch off SOS flag
-      methodchannel.invokeMethod("enableSTKLaunch");
+      //switch off Suspicious flag
+      methodchannel.invokeMethod("disableSuspiciousFlag");
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
     //geofence trigger
     Constants.location.onLocationChanged.listen((currentLocation) {
+      //send location to location checker
+      methodchannel.invokeMethod("checkIfinRange", {
+        "Latitude": currentLocation.latitude,
+        "Longitude": currentLocation.longitude
+      });
       setState(() {
         Constants.currentlocation = currentLocation;
       });
     });
+    suspicousFlagController();
   }
 
   @override
@@ -266,7 +287,6 @@ class _HomeState extends State<Home> {
                     child: Switch(
                         value: geofenceOff,
                         activeColor: Constants.appcolor,
-                        activeTrackColor: Constants.appcolor,
                         onChanged: (value) {
                           setState(() {
                             geofenceOff = !geofenceOff;
@@ -289,7 +309,6 @@ class _HomeState extends State<Home> {
                     child: Switch(
                         value: geofenceOff && suspiciousFlagOff,
                         activeColor: Constants.appcolor,
-                        activeTrackColor: Constants.appcolor,
                         onChanged: (value) {
                           setState(() {
                             suspiciousFlagOff = !suspiciousFlagOff;
@@ -298,8 +317,8 @@ class _HomeState extends State<Home> {
                         }),
                   ),
                   Text(geofenceOff && suspiciousFlagOff
-                      ? "Flag suspicuous service is on"
-                      : "Flag suspicuous service is off"),
+                      ? "Flag suspicious service is on"
+                      : "Flag suspicious service is off"),
                 ],
               ),
             ),

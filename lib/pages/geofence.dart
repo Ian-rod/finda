@@ -90,7 +90,6 @@ class _GeoFenceState extends State<GeoFence> {
                                         Navigator.of(context).pop();
                                         addgeofence(context);
                                       });
-                                      print(textRadius);
                                     })),
                           ),
                           Padding(
@@ -207,7 +206,6 @@ class _GeoFenceState extends State<GeoFence> {
                                         Navigator.of(context).pop();
                                         editgeofence(context);
                                       });
-                                      print(textRadius);
                                     })),
                           ),
                           Padding(

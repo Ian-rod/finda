@@ -51,31 +51,48 @@ class MainActivity: FlutterActivity() {
     }
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        //check if service is running
-        requestAccessibilityPermissions()
-
         var channel=MethodChannel(flutterEngine.dartExecutor.binaryMessenger,channelName);
 
         channel.setMethodCallHandler { call, result ->
-            val intentFilter = IntentFilter("com.android.stk.intent.ACTION_STK_COMMAND")
-            if(call.method=="preventSTKLaunch")
-            {
-                // Check the current foreground application
 
-//                registerReceiver(stkReceiver, intentFilter)
+            if(call.method=="setSafeZone")
+            {
+                var Lrange=call.arguments as Map<String,Double>
+                //max longitude
+                LimitListConstant.limitlist[0]= Lrange["maxLong"]!!;
+                //min longitude
+                LimitListConstant.limitlist[1]= Lrange["minLong"]!!;
+                //max latitude
+                LimitListConstant.limitlist[2]= Lrange["maxLat"]!!;
+                //min latitude
+                LimitListConstant.limitlist[3]= Lrange["minLat"]!!;
+                //set range
+                //request accessibility permissions
+                Toast.makeText(applicationContext, "safezone set max longitude ${ LimitListConstant.limitlist}", Toast.LENGTH_LONG).show()
+            }
+            if(call.method=="checkIfinRange")
+            {
+                var location=call.arguments as Map<String,Double>
+                val longitude=location["Longitude"]!!;
+                val latitude=location["Latitude"]!!;
+              //check if location is in range
+                if(longitude in  LimitListConstant.limitlist[1].. LimitListConstant.limitlist[0]&&latitude in  LimitListConstant.limitlist[3].. LimitListConstant.limitlist[2] )
+                {
+                    LimitListConstant.shouldservicerun=false;
+                }
+                else{
+                 //  Toast.makeText(applicationContext, "not in range for max longitude ${ LimitListConstant.limitlist[0]},${ LimitListConstant.limitlist[1]}", Toast.LENGTH_LONG).show()
+                    LimitListConstant.shouldservicerun=true;
+                }
+                if(LimitListConstant.shouldservicerun){
+                    requestAccessibilityPermissions();
+                }
 
             }
-            if(call.method=="enableSTKLaunch")
+            if(call.method=="disableSuspiciousFlag")
             {
-//                try {
-//                    unregisterReceiver(stkReceiver)
-//                    Toast.makeText(this,"SIM toolkit launch enabled",Toast.LENGTH_LONG).show();
-//                } catch (e: IllegalArgumentException) {
-//                    Toast.makeText(this,e.message,Toast.LENGTH_LONG).show();
-//                }
-
-            }
-
+                //disable features
+            }  //request accessibility permissions
         }
     }
 }
