@@ -72,6 +72,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to trustee page
+                Navigator.pushNamed(context, "/trustee");
               },
             ),
           ),

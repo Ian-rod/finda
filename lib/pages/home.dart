@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:finda/constants/constants.dart';
+import 'package:finda/datamodel/trusteemodel.dart';
 import 'package:finda/pages/mydrawer.dart';
 import 'package:finda/requests/basicfunctionalityrequests.dart';
 import 'package:flutter/material.dart';
@@ -194,6 +195,40 @@ class _HomeState extends State<Home> {
     suspicousFlagController();
   }
 
+//bottom list view
+  List<Widget> rowWIdgets() {
+    List<Widget> returnWidgets = [];
+    int index = 0;
+    for (Trustee t in Constants.trusteeList) {
+      returnWidgets.add(Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Card(
+          elevation: 10,
+          child: SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width / 2,
+            child: Center(
+              child: ListTile(
+                onTap: () {
+                  //open trustee view details page
+                },
+                leading: CircleAvatar(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Constants.appcolor,
+                  child: Icon(Icons.person_2_rounded),
+                ),
+                title: Text(Constants.trusteeList[index].trusteeName),
+                subtitle: Text(Constants.trusteeList[index].frequency),
+              ),
+            ),
+          ),
+        ),
+      ));
+      index++;
+    }
+    return returnWidgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillStartForegroundTask(
@@ -353,34 +388,8 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 150,
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Card(
-                      elevation: 10,
-                      child: SizedBox(
-                        height: 150,
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Center(
-                          child: ListTile(
-                            onTap: () {
-                              //open trustee view details page
-                            },
-                            leading: CircleAvatar(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Constants.appcolor,
-                              child: Icon(Icons.person_2_rounded),
-                            ),
-                            title: Text("Bruce Lyken"),
-                            subtitle: Text("Primary"),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              child: ListView(
+                  scrollDirection: Axis.horizontal, children: rowWIdgets()),
             )
           ],
         ),

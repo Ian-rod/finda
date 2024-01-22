@@ -4,6 +4,7 @@ import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/flagsuspicious.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
+import 'package:finda/pages/trustee.dart';
 import 'package:finda/requests/locationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ void main() async {
   await requestPermission();
   await getdata();
   await getsafezonedata();
+  await getTrusteedata();
 
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
@@ -53,7 +55,8 @@ void main() async {
     routes: {
       "/": (context) => Home(),
       "/geofence": (context) => GeoFence(),
-      "/safezone": (context) => FlagSusupicious()
+      "/safezone": (context) => FlagSusupicious(),
+      "/trustee": (context) => TrusteePage()
     },
   ));
 }

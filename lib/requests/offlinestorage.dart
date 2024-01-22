@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:finda/constants/constants.dart';
 import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/datamodel/safezone.dart';
+import 'package:finda/datamodel/trusteemodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geofence_service/geofence_service.dart';
 
@@ -80,7 +81,7 @@ Future<String> saveSafezonedata() async {
   prefs = await SharedPreferences.getInstance();
   String returnmessage = "Safezone saved successfully";
   try {
-    //convert to list<String> then encode
+    //convert to map<String,String> then encode
     Map<String, String> tempdata = {
       "geofenceName": Constants.safezone.geofenceName,
       "longitude": Constants.safezone.longitude.toString(),
@@ -108,6 +109,54 @@ Future<void> getsafezonedata() async {
           longitude: double.parse(tempdata["longitude"]!),
           latitude: double.parse(tempdata["latitude"]!),
           radius: double.parse(tempdata["radius"]!));
+    }
+
+    //
+  } catch (e) {
+    print("RUN INTO EXCEPTION :" + e.toString());
+  }
+}
+
+Future<String> saveTrusteedata() async {
+  prefs = await SharedPreferences.getInstance();
+  String returnmessage = "Trustee changes saved successfully";
+  try {
+    //convert to list<String> then encode
+    List<Map<String, String>> trusteeList = [];
+    for (Trustee t in Constants.trusteeList) {
+      Map<String, String> tempdata = {
+        "trusteeName": t.trusteeName,
+        "trusteePhone": t.trusteePhone,
+        "trusteeEmail": t.trusteeEmail,
+        "frequency": t.frequency,
+      };
+      trusteeList.add(tempdata);
+    }
+
+    //save safe area details
+    var jsonString = jsonEncode(trusteeList);
+    await prefs.setString("TrusteeList", jsonString);
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+  return returnmessage;
+}
+
+Future<void> getTrusteedata() async {
+  var jsonString;
+  try {
+    prefs = await SharedPreferences.getInstance();
+    jsonString = prefs.getString("TrusteeList");
+    if (jsonString != null) {
+      List<dynamic> templist = List.from(json.decode(jsonString));
+      for (Map m in templist) {
+        //create an instance of trustee for each
+        Constants.trusteeList.add(Trustee(
+            trusteeName: m["trusteeName"],
+            trusteePhone: m["trusteePhone"],
+            trusteeEmail: m["trusteeEmail"],
+            frequency: m["frequency"]));
+      }
     }
 
     //

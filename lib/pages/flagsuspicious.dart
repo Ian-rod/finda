@@ -102,8 +102,6 @@ class _FlagSusupiciousState extends State<FlagSusupicious> {
       drawer: mydrawer(context),
       body: Constants.safezone != null
           ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -142,6 +140,13 @@ class _FlagSusupiciousState extends State<FlagSusupicious> {
                     ),
                   ),
                 ),
+                Text(
+                  "Please note that ALL transactions need to be performed at this location \nany other location will be REJECTED\nsafezone currently limited to one for security concerns",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.red[900],
+                      fontWeight: FontWeight.bold),
+                )
               ],
             )
           : Center(child: Text("Tap + to add a safezone")),

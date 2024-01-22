@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:finda/datamodel/trusteemodel.dart';
 
 class Constants {
   static var appname = "Finda";
@@ -11,4 +12,13 @@ class Constants {
 
   //
   static var safezone;
+
+  //List of trustees
+  static List<Trustee> trusteeList = [];
+  static List<String> frequencyoptions = [
+    "Daily",
+    "Weekly",
+    "Monthly",
+    "Yearly"
+  ];
 }
