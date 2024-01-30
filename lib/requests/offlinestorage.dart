@@ -184,7 +184,7 @@ Future<String> saveSOSReceiverdata() async {
       sosList.add(tempdata);
     }
 
-    //save safe area details
+    //save SOS details
     var jsonString = jsonEncode(sosList);
     await prefs.setString("SOSList", jsonString);
     returnmessage = "SOS receiver changes saved successfully";
@@ -212,6 +212,35 @@ Future<void> getSOSdata() async {
     }
     returnmessage = "trustee records fetched successfully";
     //
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+}
+
+///save SOS status
+Future<String> saveSOS() async {
+  String sosStatus = Constants.sosOn ? "true" : "false";
+  try {
+    prefs = await SharedPreferences.getInstance();
+    var jsonString = jsonEncode(sosStatus);
+    await prefs.setString("sosStatus", jsonString);
+    returnmessage = "SOS status saved";
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+  return returnmessage;
+}
+
+//get SOS status
+getSOS() async {
+  try {
+    prefs = await SharedPreferences.getInstance();
+    var jsonString = prefs.getString("sosStatus");
+    if (jsonString != null) {
+      String sosStatus = json.decode(jsonString);
+      Constants.sosOn = sosStatus == "true" ? true : false;
+    }
+    returnmessage = "SOS status records fetched successfully";
   } catch (e) {
     returnmessage = e.toString();
   }

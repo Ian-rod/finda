@@ -1,6 +1,8 @@
+import 'package:finda/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:finda/datamodel/trusteemodel.dart';
+import 'package:telephony/telephony.dart';
 
 class Constants {
   static var appname = "Finda";
@@ -24,4 +26,9 @@ class Constants {
   //SOS services
   static List<Trustee> sosReceiver = [];
   static bool sosOn = false;
+  static var appHome;
+  static bool notificationtapped = false;
+
+  //telephony services
+  static final Telephony telephony = Telephony.instance;
 }

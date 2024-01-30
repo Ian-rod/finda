@@ -37,8 +37,7 @@ class _SOSsetupPageState extends State<SOSsetupPage> {
                           //event title
                           Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                                "Choose a trustee to set as an SOS Receiver"),
+                            child: Text("Choose an SOS Receiver"),
                           ),
                           //add select trustee option
                           Padding(
@@ -47,7 +46,7 @@ class _SOSsetupPageState extends State<SOSsetupPage> {
                                 child: DropdownButton(
                                     value: selectedTrustee,
                                     hint: Text(
-                                        "Select the radius of the geofence"),
+                                        "Select a trustee to add as an SOS receiver"),
                                     items: Constants.trusteeList.map((e) {
                                       return DropdownMenuItem(
                                           value: e, child: Text(e.trusteeName));

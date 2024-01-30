@@ -1,5 +1,9 @@
+import 'package:finda/constants/constants.dart';
+import 'package:finda/datamodel/trusteemodel.dart';
+import 'package:finda/pages/sospage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:telephony/telephony.dart';
 
 // Create an instance of the notification plugin
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -8,7 +12,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 // Initialize the plugin
 const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
-final InitializationSettings initializationSettings =
+const InitializationSettings initializationSettings =
     InitializationSettings(android: initializationSettingsAndroid);
 Future<void> showNotification(String message) async {
   await flutterLocalNotificationsPlugin.initialize(
@@ -39,7 +43,16 @@ Future<void> showSOSNotification(String message) async {
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (details) {
-      print("Sending to trustee...");
+      Constants.notificationtapped = true;
+      Constants.appHome = const SOSPage();
+      //send message to sos list
+      for (Trustee t in Constants.sosReceiver) {
+        //send message to each SOS receiver
+        Constants.telephony.sendSms(
+            to: t.trusteePhone,
+            message:
+                "You received an SOS alert from Ian\nCurrent location is\nlatitude: ${Constants.currentlocation.latitude}\nlongitude: ${Constants.currentlocation.longitude}");
+      }
     },
   );
   const AndroidNotificationDetails androidPlatformChannelSpecifics =

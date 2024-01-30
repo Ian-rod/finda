@@ -1,6 +1,7 @@
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
 import 'package:finda/requests/notificationrequests.dart';
+import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 
 class SOSPage extends StatefulWidget {
@@ -38,6 +39,10 @@ class _SOSPageState extends State<SOSPage> {
                           //remove notification
                           await flutterLocalNotificationsPlugin.cancel(1);
                         }
+                        await saveSOS().then((value) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(value)));
+                        });
                       }),
                 ),
                 Text(Constants.sosOn

@@ -155,7 +155,7 @@ class _TrusteePageState extends State<TrusteePage> {
                                       });
                                     }
                                   },
-                                  child: Text("Save geofence")),
+                                  child: Text("Save new Trustee")),
                             )
                           ],
                         ),
