@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:finda/constants/constants.dart';
+import 'package:finda/requests/notificationrequests.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget mydrawer(BuildContext context) {
+  var methodchannel = MethodChannel("STKchannel");
   return SafeArea(
     child: Drawer(
       backgroundColor: Constants.appcolor,
@@ -27,7 +30,7 @@ Widget mydrawer(BuildContext context) {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                //navigate to location history page
+                //navigate to homepage
                 Navigator.pushReplacementNamed(context, "/");
               },
             ),
@@ -55,7 +58,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to geofence page
-                Navigator.pushNamed(context, "/geofence");
+                Navigator.pushReplacementNamed(context, "/geofence");
               },
             ),
           ),
@@ -72,7 +75,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to trustee page
-                Navigator.pushNamed(context, "/trustee");
+                Navigator.pushReplacementNamed(context, "/trustee");
               },
             ),
           ),
@@ -86,6 +89,8 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to Distress set up page
+
+                Navigator.pushReplacementNamed(context, "/sosPage");
               },
             ),
           ),
@@ -99,7 +104,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to flag susupicious set up page
-                Navigator.pushNamed(context, "/safezone");
+                Navigator.pushReplacementNamed(context, "/safezone");
               },
             ),
           )

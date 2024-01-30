@@ -7,6 +7,8 @@ import 'package:finda/datamodel/trusteemodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geofence_service/geofence_service.dart';
 
+//all return messages are channelled here
+String returnmessage = "";
 late SharedPreferences prefs;
 //fetch data from local storage else create a new
 //the map is converted into a json string then stored as a string variable
@@ -42,16 +44,16 @@ Future<void> getdata() async {
             radius: [geofenceradius]));
       }
     }
-
+    returnmessage = "Geofence records fetched";
     //
   } catch (e) {
-    print("RUN INTO EXCEPTION :" + e.toString());
+    returnmessage = e.toString();
   }
 }
 
 Future<String> savedata() async {
   prefs = await SharedPreferences.getInstance();
-  String returnmessage = "Geofence changes saved successfully";
+
   try {
     //convert to list<String> then encode
     List<Map<String, String>> templist = [];
@@ -71,6 +73,7 @@ Future<String> savedata() async {
     //save safe area details
     var jsonString = jsonEncode(templist);
     await prefs.setString("geofencelist", jsonString);
+    returnmessage = "Geofence saved successfully";
   } catch (e) {
     returnmessage = e.toString();
   }
@@ -79,7 +82,6 @@ Future<String> savedata() async {
 
 Future<String> saveSafezonedata() async {
   prefs = await SharedPreferences.getInstance();
-  String returnmessage = "Safezone saved successfully";
   try {
     //convert to map<String,String> then encode
     Map<String, String> tempdata = {
@@ -91,6 +93,7 @@ Future<String> saveSafezonedata() async {
     //save safe area details
     var jsonString = jsonEncode(tempdata);
     await prefs.setString("safezone", jsonString);
+    returnmessage = "Safezone saved successfully";
   } catch (e) {
     returnmessage = e.toString();
   }
@@ -110,16 +113,15 @@ Future<void> getsafezonedata() async {
           latitude: double.parse(tempdata["latitude"]!),
           radius: double.parse(tempdata["radius"]!));
     }
-
+    returnmessage = "Safezone data fetched successfully";
     //
   } catch (e) {
-    print("RUN INTO EXCEPTION :" + e.toString());
+    returnmessage = e.toString();
   }
 }
 
 Future<String> saveTrusteedata() async {
   prefs = await SharedPreferences.getInstance();
-  String returnmessage = "Trustee changes saved successfully";
   try {
     //convert to list<String> then encode
     List<Map<String, String>> trusteeList = [];
@@ -136,6 +138,7 @@ Future<String> saveTrusteedata() async {
     //save safe area details
     var jsonString = jsonEncode(trusteeList);
     await prefs.setString("TrusteeList", jsonString);
+    returnmessage = "Trustee changes saved successfully";
   } catch (e) {
     returnmessage = e.toString();
   }
@@ -158,9 +161,58 @@ Future<void> getTrusteedata() async {
             frequency: m["frequency"]));
       }
     }
-
+    returnmessage = "trustee records fetched successfully";
     //
   } catch (e) {
-    print("RUN INTO EXCEPTION :" + e.toString());
+    returnmessage = e.toString();
+  }
+}
+
+//save SOS receivers
+Future<String> saveSOSReceiverdata() async {
+  prefs = await SharedPreferences.getInstance();
+  try {
+    //convert to list<String> then encode
+    List<Map<String, String>> sosList = [];
+    for (Trustee t in Constants.sosReceiver) {
+      Map<String, String> tempdata = {
+        "trusteeName": t.trusteeName,
+        "trusteePhone": t.trusteePhone,
+        "trusteeEmail": t.trusteeEmail,
+        "frequency": t.frequency,
+      };
+      sosList.add(tempdata);
+    }
+
+    //save safe area details
+    var jsonString = jsonEncode(sosList);
+    await prefs.setString("SOSList", jsonString);
+    returnmessage = "SOS receiver changes saved successfully";
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+  return returnmessage;
+}
+
+Future<void> getSOSdata() async {
+  var jsonString;
+  try {
+    prefs = await SharedPreferences.getInstance();
+    jsonString = prefs.getString("SOSList");
+    if (jsonString != null) {
+      List<dynamic> templist = List.from(json.decode(jsonString));
+      for (Map m in templist) {
+        //create an instance of trustee for each
+        Constants.sosReceiver.add(Trustee(
+            trusteeName: m["trusteeName"],
+            trusteePhone: m["trusteePhone"],
+            trusteeEmail: m["trusteeEmail"],
+            frequency: m["frequency"]));
+      }
+    }
+    returnmessage = "trustee records fetched successfully";
+    //
+  } catch (e) {
+    returnmessage = e.toString();
   }
 }

@@ -21,4 +21,7 @@ class Constants {
     "Monthly",
     "Yearly"
   ];
+  //SOS services
+  static List<Trustee> sosReceiver = [];
+  static bool sosOn = false;
 }

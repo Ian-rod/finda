@@ -198,7 +198,7 @@ class _HomeState extends State<Home> {
 //bottom list view
   List<Widget> rowWIdgets() {
     List<Widget> returnWidgets = [];
-    int index = 0;
+
     for (Trustee t in Constants.trusteeList) {
       returnWidgets.add(Padding(
         padding: const EdgeInsets.all(10.0),
@@ -209,22 +209,19 @@ class _HomeState extends State<Home> {
             width: MediaQuery.of(context).size.width / 2,
             child: Center(
               child: ListTile(
-                onTap: () {
-                  //open trustee view details page
-                },
+                onTap: () {},
                 leading: CircleAvatar(
                   foregroundColor: Colors.white,
                   backgroundColor: Constants.appcolor,
                   child: Icon(Icons.person_2_rounded),
                 ),
-                title: Text(Constants.trusteeList[index].trusteeName),
-                subtitle: Text(Constants.trusteeList[index].frequency),
+                title: Text(t.trusteeName),
+                subtitle: Text(t.frequency),
               ),
             ),
           ),
         ),
       ));
-      index++;
     }
     return returnWidgets;
   }

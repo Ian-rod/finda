@@ -4,6 +4,8 @@ import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/flagsuspicious.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
+import 'package:finda/pages/sospage.dart';
+import 'package:finda/pages/sossetup.dart';
 import 'package:finda/pages/trustee.dart';
 import 'package:finda/requests/locationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
@@ -27,6 +29,7 @@ void main() async {
   await getdata();
   await getsafezonedata();
   await getTrusteedata();
+  await getSOSdata();
 
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
@@ -56,7 +59,9 @@ void main() async {
       "/": (context) => Home(),
       "/geofence": (context) => GeoFence(),
       "/safezone": (context) => FlagSusupicious(),
-      "/trustee": (context) => TrusteePage()
+      "/trustee": (context) => TrusteePage(),
+      "/sosPage": (context) => SOSPage(),
+      "/sosSetup": (context) => SOSsetupPage()
     },
   ));
 }

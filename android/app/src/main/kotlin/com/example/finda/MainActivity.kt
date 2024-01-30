@@ -1,13 +1,11 @@
 package com.example.finda
 
 import android.accessibilityservice.AccessibilityService
-import android.app.ActivityManager
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.provider.Settings
 import android.text.TextUtils
-import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -16,6 +14,8 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
     private val channelName="STKchannel";
+
+
     private fun requestAccessibilityPermissions() {
         val accessibilityService = ForegroundAppService::class.java
         if (!isAccessibilityServiceEnabled(this, accessibilityService)) {
@@ -23,7 +23,6 @@ class MainActivity: FlutterActivity() {
             startActivity(intent)
         }
     }
-
 
    private fun isAccessibilityServiceEnabled(
         context: Context,
@@ -49,10 +48,13 @@ class MainActivity: FlutterActivity() {
 
         return false
     }
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-        var channel=MethodChannel(flutterEngine.dartExecutor.binaryMessenger,channelName);
 
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+
+        super.configureFlutterEngine(flutterEngine)
+
+        var channel=MethodChannel(flutterEngine.dartExecutor.binaryMessenger,channelName);
         channel.setMethodCallHandler { call, result ->
 
             if(call.method=="setSafeZone")
@@ -68,7 +70,7 @@ class MainActivity: FlutterActivity() {
                 LimitListConstant.limitlist[3]= Lrange["minLat"]!!;
                 //set range
                 //request accessibility permissions
-                Toast.makeText(applicationContext, "safezone set max longitude ${ LimitListConstant.limitlist}", Toast.LENGTH_LONG).show()
+              //  Toast.makeText(applicationContext, "safezone set max longitude ${ LimitListConstant.limitlist}", Toast.LENGTH_LONG).show()
             }
             if(call.method=="checkIfinRange")
             {
@@ -92,7 +94,8 @@ class MainActivity: FlutterActivity() {
             if(call.method=="disableSuspiciousFlag")
             {
                 //disable features
-            }  //request accessibility permissions
+            }
+
         }
     }
 }

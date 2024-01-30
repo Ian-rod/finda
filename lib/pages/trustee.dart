@@ -185,7 +185,7 @@ class _TrusteePageState extends State<TrusteePage> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Row(children: [
+                                title: Row(children: const [
                                   Text("Confirm delete"),
                                   SizedBox(
                                     width: 7,
