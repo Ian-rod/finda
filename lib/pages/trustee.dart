@@ -171,68 +171,90 @@ class _TrusteePageState extends State<TrusteePage> {
       appBar: appbar,
       drawer: mydrawer(context),
       body: Constants.trusteeList.isNotEmpty
-          ? ListView.builder(
-              itemCount: Constants.trusteeList.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Card(
-                    elevation: 10,
-                    child: ListTile(
-                      onLongPress: () {
-                        //call confirmation box
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Row(children: const [
-                                  Text("Confirm delete"),
-                                  SizedBox(
-                                    width: 7,
-                                  ),
-                                  Icon(Icons.delete_forever)
-                                ]),
-                                content: Text(
-                                    "Are you sure you want to delete the selected Trustee?"),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () async {
-                                        //perform delete
-                                        setState(() {
-                                          Constants.trusteeList.removeAt(index);
-                                        });
-                                        //save
-                                        await saveTrusteedata().then((value) {
-                                          Navigator.of(context).pop();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(value)));
-                                        });
-                                      },
-                                      child: Text("Yes")),
-                                  TextButton(
-                                      onPressed: () {
-                                        //close dialog
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("No"))
-                                ],
-                              );
-                            });
-                      },
-                      title: Text(Constants.trusteeList[index].trusteeName),
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Constants.appcolor,
-                        child: Icon(Icons.person),
-                      ),
-                      subtitle: Text(
-                          "Phone Number: ${Constants.trusteeList[index].trusteePhone}\nEmail: ${Constants.trusteeList[index].trusteeEmail}"),
-                      trailing: Text(Constants.trusteeList[index].frequency),
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Center(
+                    child: Text(
+                      "Trustees",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Constants.appcolor,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: Constants.trusteeList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Card(
+                          elevation: 10,
+                          child: ListTile(
+                            onLongPress: () {
+                              //call confirmation box
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Row(children: const [
+                                        Text("Confirm delete"),
+                                        SizedBox(
+                                          width: 7,
+                                        ),
+                                        Icon(Icons.delete_forever)
+                                      ]),
+                                      content: Text(
+                                          "Are you sure you want to delete the selected Trustee?"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () async {
+                                              //perform delete
+                                              setState(() {
+                                                Constants.trusteeList
+                                                    .removeAt(index);
+                                              });
+                                              //save
+                                              await saveTrusteedata()
+                                                  .then((value) {
+                                                Navigator.of(context).pop();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(value)));
+                                              });
+                                            },
+                                            child: Text("Yes")),
+                                        TextButton(
+                                            onPressed: () {
+                                              //close dialog
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("No"))
+                                      ],
+                                    );
+                                  });
+                            },
+                            title:
+                                Text(Constants.trusteeList[index].trusteeName),
+                            leading: CircleAvatar(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Constants.appcolor,
+                              child: Icon(Icons.person),
+                            ),
+                            subtitle: Text(
+                                "Phone Number: ${Constants.trusteeList[index].trusteePhone}\nEmail: ${Constants.trusteeList[index].trusteeEmail}"),
+                            trailing:
+                                Text(Constants.trusteeList[index].frequency),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             )
           : Center(child: Text("Tap + to add a trustee")),
       floatingActionButton: FloatingActionButton(

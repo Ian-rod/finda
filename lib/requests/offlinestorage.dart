@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:finda/constants/constants.dart';
 import 'package:finda/constants/geoconstants.dart';
+import 'package:finda/datamodel/locationhistory.dart';
 import 'package:finda/datamodel/safezone.dart';
 import 'package:finda/datamodel/trusteemodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -175,13 +177,12 @@ Future<String> saveSOSReceiverdata() async {
     //convert to list<String> then encode
     List<Map<String, String>> sosList = [];
     for (Trustee t in Constants.sosReceiver) {
-      Map<String, String> tempdata = {
+      sosList.add({
         "trusteeName": t.trusteeName,
         "trusteePhone": t.trusteePhone,
         "trusteeEmail": t.trusteeEmail,
         "frequency": t.frequency,
-      };
-      sosList.add(tempdata);
+      });
     }
 
     //save SOS details
@@ -241,6 +242,56 @@ getSOS() async {
       Constants.sosOn = sosStatus == "true" ? true : false;
     }
     returnmessage = "SOS status records fetched successfully";
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+}
+
+//location history storage
+saveLocationHistoryAndStatus() async {
+  List<Map<String, String>> locationHist = [];
+  for (LocationHistory lh in Constants.mylocationHistory) {
+    locationHist.add({
+      "longitude": lh.longitude.toString(),
+      "latitude": lh.latitude.toString(),
+      "logTime": lh.logTime.toString(),
+      "address": lh.address
+    });
+  }
+  try {
+    //save Location history details
+    prefs = await SharedPreferences.getInstance();
+    var jsonString = jsonEncode(locationHist);
+    await prefs.setString("LocationHistory", jsonString);
+    jsonString = jsonEncode(Constants.locationUpdateFrequency.toString());
+    await prefs.setString("LocationUpdateFrequency", jsonString);
+    returnmessage = "Location History changes saved successfully";
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+}
+
+//obtain location history
+
+getLocationHistoryandStatus() async {
+  try {
+    prefs = await SharedPreferences.getInstance();
+    var jsonString = prefs.getString("LocationHistory");
+    if (jsonString != null) {
+      //recreate location history status
+      List<dynamic> templist = List.from(json.decode(jsonString));
+      for (Map m in templist) {
+        Constants.mylocationHistory.add(LocationHistory(
+            longitude: double.parse(m["longitude"]),
+            latitude: double.parse(m["latitude"]),
+            logTime: DateTime.parse(m["logTime"]),
+            address: m["address"]));
+      }
+    }
+    jsonString = prefs.getString("LocationUpdateFrequency");
+    Constants.locationUpdateFrequency =
+        int.parse(json.decode(jsonString.toString()));
+    returnmessage = "Location History changes fetched successfully";
   } catch (e) {
     returnmessage = e.toString();
   }

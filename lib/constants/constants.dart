@@ -1,3 +1,4 @@
+import 'package:finda/datamodel/locationhistory.dart';
 import 'package:finda/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -31,4 +32,8 @@ class Constants {
 
   //telephony services
   static final Telephony telephony = Telephony.instance;
+
+  //location history
+  static List<LocationHistory> mylocationHistory = [];
+  static int locationUpdateFrequency = 1440;
 }

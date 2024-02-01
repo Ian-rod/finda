@@ -284,78 +284,98 @@ class _GeoFenceState extends State<GeoFence> {
       body: GeoFenceConstants.geofenceList.isEmpty
           ? Center(child: Text("No geofences set press + to add a geofence"))
           : Center(
-              child: ListView.builder(
-                itemCount: GeoFenceConstants.geofenceList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: InkWell(
-                      onTap: () {
-                        //edit geofence
-                        itemindex = index;
-                        placeId.text = GeoFenceConstants.geofenceList[index].id;
-                        editgeofence(context);
-                      },
-                      onLongPress: () {
-                        //delete geofence
-                        itemindex = index;
-                        //delete event
-                        //call confirmation box
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Row(children: [
-                                  Text("Confirm delete"),
-                                  SizedBox(
-                                    width: 7,
-                                  ),
-                                  Icon(Icons.delete_forever)
-                                ]),
-                                content: Text(
-                                    "Are you sure you want to delete the selected Geofence?"),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () async {
-                                        //perform delete
-                                        setState(() {
-                                          GeoFenceConstants.geofenceList
-                                              .removeAt(index);
-                                        });
-                                        //save
-                                        await savedata().then((value) {
-                                          Navigator.of(context).pop();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(value)));
-                                        });
-                                      },
-                                      child: Text("Yes")),
-                                  TextButton(
-                                      onPressed: () {
-                                        //close dialog
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("No"))
-                                ],
-                              );
-                            });
-                        //confirm delete
-                        //delete then save
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Constants.appcolor,
-                          child: Icon(
-                            Icons.location_on_outlined,
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Text(GeoFenceConstants.geofenceList[index].id),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Text(
+                        "Geofences",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Constants.appcolor,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  );
-                },
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: GeoFenceConstants.geofenceList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: InkWell(
+                            onTap: () {
+                              //edit geofence
+                              itemindex = index;
+                              placeId.text =
+                                  GeoFenceConstants.geofenceList[index].id;
+                              editgeofence(context);
+                            },
+                            onLongPress: () {
+                              //delete geofence
+                              itemindex = index;
+                              //delete event
+                              //call confirmation box
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Row(children: [
+                                        Text("Confirm delete"),
+                                        SizedBox(
+                                          width: 7,
+                                        ),
+                                        Icon(Icons.delete_forever)
+                                      ]),
+                                      content: Text(
+                                          "Are you sure you want to delete the selected Geofence?"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () async {
+                                              //perform delete
+                                              setState(() {
+                                                GeoFenceConstants.geofenceList
+                                                    .removeAt(index);
+                                              });
+                                              //save
+                                              await savedata().then((value) {
+                                                Navigator.of(context).pop();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(value)));
+                                              });
+                                            },
+                                            child: Text("Yes")),
+                                        TextButton(
+                                            onPressed: () {
+                                              //close dialog
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("No"))
+                                      ],
+                                    );
+                                  });
+                              //confirm delete
+                              //delete then save
+                            },
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Constants.appcolor,
+                                child: Icon(
+                                  Icons.location_on_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              title: Text(
+                                  GeoFenceConstants.geofenceList[index].id),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
       floatingActionButton: FloatingActionButton(

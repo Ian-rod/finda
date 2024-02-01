@@ -4,6 +4,7 @@ import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/flagsuspicious.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
+import 'package:finda/pages/locationhistorypage.dart';
 import 'package:finda/pages/sospage.dart';
 import 'package:finda/pages/sossetup.dart';
 import 'package:finda/pages/trustee.dart';
@@ -78,7 +79,8 @@ void main() async {
       "/safezone": (context) => FlagSusupicious(),
       "/trustee": (context) => TrusteePage(),
       "/sosPage": (context) => SOSPage(),
-      "/sosSetup": (context) => SOSsetupPage()
+      "/sosSetup": (context) => SOSsetupPage(),
+      "/locationhistory": (context) => LocationHistoryPage()
     },
   ));
 }

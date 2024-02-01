@@ -85,7 +85,8 @@ class _SOSsetupPageState extends State<SOSsetupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Trustee set up page"),
+        foregroundColor: Constants.appcolor,
+        title: Text("SOS receiver setup page"),
         centerTitle: true,
       ),
       body: Constants.sosReceiver.isNotEmpty
