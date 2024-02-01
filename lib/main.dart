@@ -33,6 +33,7 @@ void main() async {
   await getTrusteedata();
   await getSOSdata();
   await getSOS();
+  await getLocationHistoryandStatus();
 
   //request phone permissions
   await Constants.telephony.requestPhoneAndSmsPermissions;

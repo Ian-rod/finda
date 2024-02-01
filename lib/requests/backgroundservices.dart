@@ -23,7 +23,7 @@ locationHistorypdater() async {
         longitude: Constants.currentlocation.longitude,
         latitude: Constants.currentlocation.latitude,
         logTime: DateTime.now(),
-        address: obtainAddress()));
+        address: await obtainAddress()));
     //save to local storage
     await saveLocationHistoryAndStatus();
     //close function call
@@ -33,7 +33,7 @@ locationHistorypdater() async {
 
 //try to obtain longitude and latitude address
 //maybe add a location checker
-obtainAddress() async {
+Future<String> obtainAddress() async {
   String address = "Address unavailable";
   try {
     List<Placemark> placemarks = await placemarkFromCoordinates(

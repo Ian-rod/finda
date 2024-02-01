@@ -19,7 +19,6 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
   @override
   void initState() {
     super.initState();
-    getLocationHistoryandStatus();
     //check current frequency status
     if (Constants.locationUpdateFrequency == 30) {
       updateFrequency = "30 min";

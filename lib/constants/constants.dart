@@ -35,6 +35,6 @@ class Constants {
 
   //location history
   static List<LocationHistory> mylocationHistory = [];
-  static int locationUpdateFrequency = 1440;
+  static var locationUpdateFrequency;
   static List<String> locationFrequencyOptions = ["30 min", "Hourly", "Daily"];
 }
