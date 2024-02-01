@@ -269,6 +269,7 @@ saveLocationHistoryAndStatus() async {
   } catch (e) {
     returnmessage = e.toString();
   }
+  return returnmessage;
 }
 
 //obtain location history
@@ -288,9 +289,12 @@ getLocationHistoryandStatus() async {
             address: m["address"]));
       }
     }
+    jsonString = null;
     jsonString = prefs.getString("LocationUpdateFrequency");
-    Constants.locationUpdateFrequency =
-        int.parse(json.decode(jsonString.toString()));
+    if (jsonString != null) {
+      Constants.locationUpdateFrequency = int.parse(json.decode(jsonString));
+    }
+
     returnmessage = "Location History changes fetched successfully";
   } catch (e) {
     returnmessage = e.toString();
