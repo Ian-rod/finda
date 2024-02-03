@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:background_fetch/background_fetch.dart';
 import 'package:finda/constants/constants.dart';
 import 'package:finda/datamodel/locationhistory.dart';
@@ -18,12 +20,27 @@ locationHistorypdater() async {
         requiresDeviceIdle: false,
       ), (String taskid) async {
     //update location history records
-    //store current location in location list
-    Constants.mylocationHistory.add(LocationHistory(
-        longitude: Constants.currentlocation.longitude,
-        latitude: Constants.currentlocation.latitude,
-        logTime: DateTime.now(),
-        address: await obtainAddress()));
+    //internet check
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        //internet available
+        //store current location in location list
+        Constants.mylocationHistory.add(LocationHistory(
+            longitude: Constants.currentlocation.longitude,
+            latitude: Constants.currentlocation.latitude,
+            logTime: DateTime.now(),
+            address: await obtainAddress()));
+      }
+    } on SocketException catch (_) {
+      //internet unavailable
+      Constants.mylocationHistory.add(LocationHistory(
+          longitude: Constants.currentlocation.longitude,
+          latitude: Constants.currentlocation.latitude,
+          logTime: DateTime.now(),
+          address: "Address unavailable"));
+    }
+
     //save to local storage
     await saveLocationHistoryAndStatus();
     //close function call

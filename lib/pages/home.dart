@@ -194,6 +194,7 @@ class _HomeState extends State<Home> {
       });
     });
     suspicousFlagController();
+    startGeofence();
   }
 
 //bottom list view
