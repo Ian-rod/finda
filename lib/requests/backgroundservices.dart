@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:finda/constants/constants.dart';
 import 'package:finda/datamodel/locationhistory.dart';
+import 'package:finda/requests/notificationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -23,6 +24,7 @@ locationHistorypdater() async {
     //internet check
     try {
       final result = await InternetAddress.lookup('example.com');
+      Constants.currentlocation = await Constants.location.getLocation();
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         //internet available
         //store current location in location list
@@ -40,7 +42,7 @@ locationHistorypdater() async {
           logTime: DateTime.now(),
           address: "Address unavailable"));
     }
-
+    await showLocationUpdateNotification("Current location logged");
     //save to local storage
     await saveLocationHistoryAndStatus();
     //close function call

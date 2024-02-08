@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:finda/constants/constants.dart';
+import 'package:finda/datamodel/locationhistory.dart';
 import 'package:finda/pages/flagsuspicious.dart';
 import 'package:finda/pages/geofence.dart';
 import 'package:finda/pages/home.dart';
@@ -8,11 +11,13 @@ import 'package:finda/pages/locationhistorypage.dart';
 import 'package:finda/pages/sospage.dart';
 import 'package:finda/pages/sossetup.dart';
 import 'package:finda/pages/trustee.dart';
+import 'package:finda/requests/backgroundservices.dart';
 import 'package:finda/requests/locationrequests.dart';
 import 'package:finda/requests/notificationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:background_fetch/background_fetch.dart';
 
 void main() async {
   Constants.binding = WidgetsFlutterBinding();
@@ -33,7 +38,6 @@ void main() async {
   await getTrusteedata();
   await getSOSdata();
   await getSOS();
-  await getLocationHistoryandStatus();
 
   //request phone permissions
   await Constants.telephony.requestPhoneAndSmsPermissions;
@@ -41,7 +45,6 @@ void main() async {
   if (Constants.sosOn) {
     await showSOSNotification("Click to send a distress call");
   }
-
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
     100: Color.fromRGBO(208, 17, 119, 0.2),
@@ -84,4 +87,44 @@ void main() async {
       "/locationhistory": (context) => LocationHistoryPage()
     },
   ));
+  //register headless when app is terminated
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+}
+
+@pragma('vm:entry-point')
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  //get existing history
+  await getLocationHistoryandStatus();
+  String taskId = task.taskId;
+  bool isTimeout = task.timeout;
+  if (isTimeout) {
+    // This task has exceeded its allowed running-time.
+    // You must stop what you're doing and immediately .finish(taskId)
+    BackgroundFetch.finish(taskId);
+    return;
+  }
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    Constants.currentlocation = await Constants.location.getLocation();
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      //internet available
+      //store current location in location list
+      Constants.mylocationHistory.add(LocationHistory(
+          longitude: Constants.currentlocation.longitude,
+          latitude: Constants.currentlocation.latitude,
+          logTime: DateTime.now(),
+          address: await obtainAddress()));
+    }
+  } on SocketException catch (_) {
+    //internet unavailable
+    Constants.mylocationHistory.add(LocationHistory(
+        longitude: Constants.currentlocation.longitude,
+        latitude: Constants.currentlocation.latitude,
+        logTime: DateTime.now(),
+        address: "Address unavailable"));
+  }
+  await showLocationUpdateNotification("Current location logged");
+  //save to local storage
+  await saveLocationHistoryAndStatus();
+  BackgroundFetch.finish(taskId);
 }

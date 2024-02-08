@@ -163,8 +163,13 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
                             const MaterialStatePropertyAll(Colors.white),
                         backgroundColor:
                             MaterialStatePropertyAll(Constants.appcolor)),
-                    onPressed: () {
+                    onPressed: () async {
                       //clear location history
+                      Constants.mylocationHistory.clear();
+                      await saveLocationHistoryAndStatus();
+                      setState(() {
+                        Constants.mylocationHistory = [];
+                      });
                     },
                     icon: const Icon(Icons.delete_forever_sharp),
                     label: const Text("Clear location history"),

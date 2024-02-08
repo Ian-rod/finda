@@ -51,7 +51,7 @@ Future<void> showSOSNotification(String message) async {
         Constants.telephony.sendSms(
             to: t.trusteePhone,
             message:
-                "You received an SOS alert from Ian\nCurrent location is\nlatitude: ${Constants.currentlocation.latitude}\nlongitude: ${Constants.currentlocation.longitude}");
+                "You received an SOS alert from Ian\nCurrent location is\n https://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}");
       }
     },
   );
@@ -68,6 +68,32 @@ Future<void> showSOSNotification(String message) async {
   await flutterLocalNotificationsPlugin.show(
     1, // Notification ID
     'SOS',
+    message,
+    platformChannelSpecifics,
+  );
+}
+
+//set up for location history updated notification
+Future<void> showLocationUpdateNotification(String message) async {
+  // Create an instance of the notification plugin
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (details) {},
+  );
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+          'LocationUpdateChannel', // Replace with your own channel ID
+          'LOcation Update channel', // Replace with your own channel name
+          importance: Importance.high,
+          priority: Priority.high,
+          ongoing: false);
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    1, // Notification ID
+    'Location History Update',
     message,
     platformChannelSpecifics,
   );

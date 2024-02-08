@@ -12,7 +12,8 @@ xmlns:tools="http://schemas.android.com/tools"
         tools:replace="android:label"
         android:label="finda"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        >
         <service
             android:name=".ForegroundAppService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"

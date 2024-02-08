@@ -37,4 +37,7 @@ class Constants {
   static List<LocationHistory> mylocationHistory = [];
   static var locationUpdateFrequency;
   static List<String> locationFrequencyOptions = ["30 min", "Hourly", "Daily"];
+
+  //background location
+  static const String isolateName = "LocatorIsolate";
 }
