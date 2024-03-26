@@ -34,7 +34,7 @@ class _SOSPageState extends State<SOSPage> {
                         });
                         if (Constants.sosOn) {
                           await showSOSNotification(
-                              "Click to send a distress call");
+                              "Click to send a distress message");
                         } else {
                           //remove notification
                           await flutterLocalNotificationsPlugin.cancel(1);

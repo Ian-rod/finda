@@ -44,7 +44,7 @@ Widget mydrawer(BuildContext context) {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                Navigator.pushNamed(context, "/locationhistory");
+                Navigator.pushReplacementNamed(context, "/locationhistory");
               },
             ),
           ),

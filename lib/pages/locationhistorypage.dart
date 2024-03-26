@@ -3,6 +3,7 @@
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
 import 'package:finda/requests/offlinestorage.dart';
+import 'package:finda/requests/printreports.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../requests/backgroundservices.dart';
@@ -155,25 +156,50 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
                     label: const Text("Location history preferences"),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: TextButton.icon(
-                    style: ButtonStyle(
-                        foregroundColor:
-                            const MaterialStatePropertyAll(Colors.white),
-                        backgroundColor:
-                            MaterialStatePropertyAll(Constants.appcolor)),
-                    onPressed: () async {
-                      //clear location history
-                      Constants.mylocationHistory.clear();
-                      await saveLocationHistoryAndStatus();
-                      setState(() {
-                        Constants.mylocationHistory = [];
-                      });
-                    },
-                    icon: const Icon(Icons.delete_forever_sharp),
-                    label: const Text("Clear location history"),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: TextButton.icon(
+                        style: ButtonStyle(
+                            foregroundColor:
+                                const MaterialStatePropertyAll(Colors.white),
+                            backgroundColor:
+                                MaterialStatePropertyAll(Constants.appcolor)),
+                        onPressed: () async {
+                          //clear location history
+                          Constants.mylocationHistory.clear();
+                          await saveLocationHistoryAndStatus();
+                          setState(() {
+                            Constants.mylocationHistory = [];
+                          });
+                        },
+                        icon: const Icon(Icons.delete_forever_sharp),
+                        label: const Text("Clear location history"),
+                      ),
+                    ),
+                    //print reports
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: TextButton.icon(
+                        style: ButtonStyle(
+                            foregroundColor:
+                                const MaterialStatePropertyAll(Colors.white),
+                            backgroundColor:
+                                MaterialStatePropertyAll(Constants.appcolor)),
+                        onPressed: () async {
+                          await printReport().then((value) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(value)));
+                          });
+                        },
+                        icon: const Icon(Icons.print),
+                        label: const Text("Print location report"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
