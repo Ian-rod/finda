@@ -107,8 +107,7 @@ void main() async {
   //a reminder
   locationHistorypdater();
   runApp(MaterialApp(
-    // home: Constants.appHome,
-    home: LocationHistoryPage(),
+    home: Constants.appHome,
     title: "Finda",
     theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
