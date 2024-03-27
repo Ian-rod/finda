@@ -58,7 +58,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to geofence page
-                Navigator.pushNamed(context, "/geofence");
+                Navigator.pushReplacementNamed(context, "/geofence");
               },
             ),
           ),

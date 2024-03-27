@@ -282,20 +282,25 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  Card(
-                    elevation: 10,
-                    child: Stack(
-                      children: [
-                        Image.asset(
-                          "images/location.png",
-                          fit: BoxFit.fitWidth,
-                        ),
-                        Positioned(
-                            bottom: 0,
-                            left: 40,
-                            child: Text(
-                                "${Constants.currentlocation.latitude} , ${Constants.currentlocation.longitude}"))
-                      ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/mapPage");
+                    },
+                    child: Card(
+                      elevation: 10,
+                      child: Stack(
+                        children: [
+                          Image.asset(
+                            "images/location.png",
+                            fit: BoxFit.fitWidth,
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              left: 40,
+                              child: Text(
+                                  "${Constants.currentlocation.latitude} , ${Constants.currentlocation.longitude}"))
+                        ],
+                      ),
                     ),
                   ),
                 ],
