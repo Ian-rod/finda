@@ -49,33 +49,50 @@ class _HomeState extends State<Home> {
     if (currActivity.type == ActivityType.STILL) {
       activityIcon = Icons.attribution;
       currentActivity = "Still";
+      Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
+      Constants.previousActivity = previousActivity;
       confidence = currActivity.confidence.name;
+      Constants.confidence = confidence;
     } else if (currActivity.type == ActivityType.RUNNING) {
       activityIcon = Icons.run_circle_outlined;
       currentActivity = "Running";
+      Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
+      Constants.previousActivity = previousActivity;
       confidence = currActivity.confidence.name;
+      Constants.confidence = confidence;
     } else if (currActivity.type == ActivityType.ON_BICYCLE) {
       activityIcon = Icons.bike_scooter;
       currentActivity = "Bicycle";
+      Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
+      Constants.previousActivity = previousActivity;
       confidence = currActivity.confidence.name;
+      Constants.confidence = confidence;
     } else if (currActivity.type == ActivityType.UNKNOWN) {
       activityIcon = Icons.device_unknown;
       currentActivity = "Unknown";
+      Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
+      Constants.previousActivity = previousActivity;
       confidence = currActivity.confidence.name;
     } else if (currActivity.type == ActivityType.WALKING) {
       activityIcon = Icons.directions_walk_outlined;
       currentActivity = "Walking";
+      Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
+      Constants.previousActivity = previousActivity;
       confidence = currActivity.confidence.name;
+      Constants.confidence = confidence;
     } else {
       activityIcon = Icons.car_repair;
       currentActivity = "In vehicle";
+      Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
+      Constants.previousActivity = previousActivity;
       confidence = currActivity.confidence.name;
+      Constants.confidence = confidence;
     }
     // await showNotification(
     //     "previous Activity: ${prevActivity.toJson()}\n current Activity: ${currActivity.toJson()}");

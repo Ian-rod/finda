@@ -40,4 +40,9 @@ class Constants {
 
   //background location
   static const String isolateName = "LocatorIsolate";
+
+  //Activity,speed status
+  static String currentActivity = "Loading";
+  static String previousActivity = "Loading";
+  static String confidence = "0";
 }

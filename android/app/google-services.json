@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "432044935301",
+    "project_id": "finda-186e6",
+    "storage_bucket": "finda-186e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432044935301:android:065fbbf05189b475e281ec",
+        "android_client_info": {
+          "package_name": "com.example.finda"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLnWsjQwah7j91lJDtmMIE2XpoVfmATpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

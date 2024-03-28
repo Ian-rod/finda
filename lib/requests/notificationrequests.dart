@@ -51,7 +51,7 @@ Future<void> showSOSNotification(String message) async {
         Constants.telephony.sendSms(
             to: t.trusteePhone,
             message:
-                "You received an SOS alert from Ian\nCurrent location is\n https://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}");
+                "You received an SOS alert from Ian\nCurrent location is\n https://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}\nCurrent activity is: ${Constants.currentActivity}\nPrevious activity is: ${Constants.previousActivity}\nCurrent speed is: ${Constants.currentlocation.speed.toInt().toString()} m/s\nCurrent altitude: ${Constants.currentlocation.altitude.toInt().toString()} m\nConfidence level: ${Constants.confidence}");
       }
     },
   );

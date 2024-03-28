@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
 
 import 'package:finda/constants/constants.dart';
 import 'package:finda/datamodel/locationhistory.dart';
@@ -107,6 +110,10 @@ void main() async {
   MaterialColor colorCustom = MaterialColor(0xFF013220, color);
   //a reminder
   locationHistorypdater();
+  //initialize firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MaterialApp(
     home: Constants.appHome,
     title: "Finda",
