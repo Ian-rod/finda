@@ -54,12 +54,16 @@ xmlns:tools="http://schemas.android.com/tools"
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+             <meta-data
+              android:name="flutter_deeplinking_enabled"
+              android:value="true"
+              />
             <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" />
-            <data android:host="finda-186e6.web.app"/>
+            <data android:host="finda-186e6.web.app" android:scheme="https"/>
+            <data android:host="finda-186e6.web.app" android:scheme="http" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

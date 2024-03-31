@@ -45,4 +45,7 @@ class Constants {
   static String currentActivity = "Loading";
   static String previousActivity = "Loading";
   static String confidence = "0";
+
+  //User name
+  static String username = "User";
 }

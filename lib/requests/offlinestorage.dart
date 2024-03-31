@@ -6,6 +6,7 @@ import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/datamodel/locationhistory.dart';
 import 'package:finda/datamodel/safezone.dart';
 import 'package:finda/datamodel/trusteemodel.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geofence_service/geofence_service.dart';
 
@@ -296,6 +297,36 @@ getLocationHistoryandStatus() async {
     }
 
     returnmessage = "Location History changes fetched successfully";
+    debugPrint(returnmessage);
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+}
+
+///save Username
+Future<String> saveUsername() async {
+  try {
+    prefs = await SharedPreferences.getInstance();
+    var jsonString = jsonEncode(Constants.username);
+    await prefs.setString("username", jsonString);
+    returnmessage = "UserName saved";
+    debugPrint(returnmessage);
+  } catch (e) {
+    returnmessage = e.toString();
+  }
+  return returnmessage;
+}
+
+//get username
+getUsername() async {
+  try {
+    prefs = await SharedPreferences.getInstance();
+    var jsonString = prefs.getString("username");
+    if (jsonString != null) {
+      Constants.username = json.decode(jsonString);
+    }
+    returnmessage = "username fetched successfully";
+    debugPrint(returnmessage);
   } catch (e) {
     returnmessage = e.toString();
   }

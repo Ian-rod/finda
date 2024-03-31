@@ -15,7 +15,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar,
+      appBar: myappdrawer(context),
       body: FlutterMap(
         options: MapOptions(
           initialCenter: LatLng(
@@ -47,7 +47,7 @@ class _MapPageState extends State<MapPage> {
                     //open info pop up
                   },
                   icon: const Icon(Icons.location_history),
-                  label: const Text("Ian"),
+                  label: Text(Constants.username),
                 ))
           ])
         ],

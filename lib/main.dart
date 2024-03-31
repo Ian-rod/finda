@@ -22,6 +22,7 @@ import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:background_fetch/background_fetch.dart';
+import 'package:go_router/go_router.dart';
 
 @pragma('vm:entry-point')
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
@@ -83,9 +84,10 @@ void main() async {
   await getLocationHistoryandStatus();
   //request phone permissions
   await Constants.telephony.requestPhoneAndSmsPermissions;
+
 //turn on/off SOS service
   if (Constants.sosOn) {
-    await showSOSNotification("Click to send a distress call");
+    await showSOSNotification("Click to send a distress Message");
   }
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
@@ -114,6 +116,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //go router config
+
   runApp(MaterialApp(
     home: Constants.appHome,
     title: "Finda",

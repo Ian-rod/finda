@@ -1,7 +1,7 @@
 [{
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
-      "namespace": "finda",
+      "namespace": "android_app",
       "package_name": "com.example.finda",
       "sha256_cert_fingerprints":
         ["3F:DE:58:75:D3:3B:6B:67:90:F0:08:63:95:6A:97:86:F5:30:B2:6C:8C:4A:95:0E:5D:C5:7D:73:E7:BC:8A:B6"]

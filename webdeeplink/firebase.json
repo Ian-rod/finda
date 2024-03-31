@@ -9,8 +9,7 @@
         }
       ]
     }
-  ]
-,  
+  ],
   "hosting": {
     "public": "public",
     "ignore": [
@@ -21,7 +20,7 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/.well-known/assetlinks.json"
+        "destination": "/index.html"
       }
     ]
   }

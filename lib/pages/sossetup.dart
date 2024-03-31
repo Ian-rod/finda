@@ -45,8 +45,7 @@ class _SOSsetupPageState extends State<SOSsetupPage> {
                             child: SizedBox(
                                 child: DropdownButton(
                                     value: selectedTrustee,
-                                    hint: Text(
-                                        "Select a trustee to add as an SOS receiver"),
+                                    hint: Text("Select an SOS receiver"),
                                     items: Constants.trusteeList.map((e) {
                                       return DropdownMenuItem(
                                           value: e, child: Text(e.trusteeName));

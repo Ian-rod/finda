@@ -279,7 +279,7 @@ class _GeoFenceState extends State<GeoFence> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar,
+      appBar: myappdrawer(context),
       drawer: mydrawer(context),
       body: GeoFenceConstants.geofenceList.isEmpty
           ? Center(child: Text("No geofences set press + to add a geofence"))

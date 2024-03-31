@@ -98,7 +98,7 @@ class _FlagSusupiciousState extends State<FlagSusupicious> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar,
+      appBar: myappdrawer(context),
       drawer: mydrawer(context),
       body: Constants.safezone != null
           ? Column(

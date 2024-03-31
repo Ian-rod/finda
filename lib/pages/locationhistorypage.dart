@@ -109,7 +109,7 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar,
+      appBar: myappdrawer(context),
       drawer: mydrawer(context),
       body: Column(
         children: [
