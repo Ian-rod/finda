@@ -5,6 +5,8 @@ import 'package:geofence_service/geofence_service.dart';
 
 //request location permission
 Future<void> requestPermission() async {
+  bool? permissionsGranted =
+      await Constants.telephony.requestPhoneAndSmsPermissions;
   bool _serviceEnabled;
   locationpackage.PermissionStatus _permissionGranted;
 

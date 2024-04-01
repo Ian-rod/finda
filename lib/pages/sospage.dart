@@ -3,6 +3,7 @@ import 'package:finda/pages/mydrawer.dart';
 import 'package:finda/requests/notificationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SOSPage extends StatefulWidget {
   const SOSPage({super.key});
@@ -63,7 +64,7 @@ class _SOSPageState extends State<SOSPage> {
                         MaterialStatePropertyAll(Constants.appcolor)),
                 onPressed: () {
                   //navigate to SOS setup page
-                  Navigator.pushNamed(context, "/sosSetup");
+                  context.go("/sosSetup");
                 },
                 icon: const Icon(Icons.sos_sharp),
                 label: const Text("Set up SOS receivers"),

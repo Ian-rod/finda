@@ -48,10 +48,15 @@ Future<void> showSOSNotification(String message) async {
       //send message to sos list
       for (Trustee t in Constants.sosReceiver) {
         //send message to each SOS receiver
+        listener(SendStatus status) {
+          debugPrint(status.name);
+        }
+
         Constants.telephony.sendSms(
             to: t.trusteePhone,
+            statusListener: listener,
             message:
-                "You received an SOS alert from Ian\nCurrent location is\n https://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}\nCurrent activity is: ${Constants.currentActivity}\nPrevious activity is: ${Constants.previousActivity}\nCurrent speed is: ${Constants.currentlocation.speed.toInt().toString()} m/s\nCurrent altitude: ${Constants.currentlocation.altitude.toInt().toString()} m\nConfidence level: ${Constants.confidence}");
+                "You received an SOS alert from Ian\nCurrent location is\nGoogle Maps Link \nhttps://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}\nApp Link(if you have finda installed)\nhttps://finda-186e6.web.app/mapPage/Lyon/${Constants.currentlocation.latitude}/${Constants.currentlocation.longitude}/${Constants.currentActivity}/${Constants.previousActivity}/${Constants.currentlocation.speed.toInt().toString()}/${Constants.currentlocation.altitude.toInt().toString()}/${Constants.confidence}");
       }
     },
   );

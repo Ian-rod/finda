@@ -14,11 +14,24 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   List<Marker> myMarkers = [];
+  var currentActivityIcon;
+  var prevActivityIcon;
+
   @override
   Widget build(BuildContext context) {
     if (GoRouterState.of(context).pathParameters.isNotEmpty) {
       //capture passed params
       String username = GoRouterState.of(context).pathParameters["username"]!;
+      String currActivity =
+          GoRouterState.of(context).pathParameters["currActivity"]!;
+      String prevActivity =
+          GoRouterState.of(context).pathParameters["prevActivity"]!;
+      String speed = GoRouterState.of(context).pathParameters["speed"]!;
+      String altitude = GoRouterState.of(context).pathParameters["altitude"]!;
+      String confidence =
+          GoRouterState.of(context).pathParameters["confidence"]!;
+      //mapping Icons
+
       double lat =
           double.parse(GoRouterState.of(context).pathParameters["latitude"]!);
       double long =
@@ -59,6 +72,55 @@ class _MapPageState extends State<MapPage> {
                       MaterialStatePropertyAll(Constants.appcolor)),
               onPressed: () {
                 //open info pop up
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              "$username details",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Constants.appcolor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Expanded(
+                              child: ListView(children: [
+                            ListTile(
+                              leading: Icon(currentActivityIcon),
+                              title: const Text("Current activity"),
+                              trailing: Text(currActivity),
+                            ),
+                            ListTile(
+                              leading: Icon(prevActivityIcon),
+                              title: const Text("Previous activity"),
+                              trailing: Text(prevActivity),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.speed),
+                              title: const Text("speed"),
+                              trailing: Text("$speed m/s"),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.arrow_upward),
+                              title: const Text("altitude"),
+                              trailing: Text(altitude),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.check_circle),
+                              title: const Text("Confidence"),
+                              trailing: Text(confidence),
+                            )
+                          ]))
+                        ],
+                      );
+                    });
               },
               icon: const Icon(Icons.location_history),
               label: Text(username),

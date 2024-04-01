@@ -163,7 +163,8 @@ void main() async {
             },
           ),
           GoRoute(
-            path: 'mapPage/:username/:latitude/:longitude',
+            path:
+                'mapPage/:username/:latitude/:longitude/:currActivity/:prevActivity/:speed/:altitude/:confidence',
             builder: (BuildContext context, GoRouterState state) {
               return const MapPage();
             },
