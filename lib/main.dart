@@ -163,6 +163,12 @@ void main() async {
             },
           ),
           GoRoute(
+            path: 'mapPage/:username/:latitude/:longitude',
+            builder: (BuildContext context, GoRouterState state) {
+              return const MapPage();
+            },
+          ),
+          GoRoute(
             path: 'mapPage',
             builder: (BuildContext context, GoRouterState state) {
               return const MapPage();

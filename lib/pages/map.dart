@@ -2,6 +2,7 @@ import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapPage extends StatefulWidget {
@@ -12,8 +13,80 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  List<Marker> myMarkers = [];
   @override
   Widget build(BuildContext context) {
+    if (GoRouterState.of(context).pathParameters.isNotEmpty) {
+      //capture passed params
+      String username = GoRouterState.of(context).pathParameters["username"]!;
+      double lat =
+          double.parse(GoRouterState.of(context).pathParameters["latitude"]!);
+      double long =
+          double.parse(GoRouterState.of(context).pathParameters["longitude"]!);
+      //create a marker
+      myMarkers = [
+        //me
+        Marker(
+            height: 35,
+            width: 100,
+            point: LatLng(
+              Constants.currentlocation.latitude,
+              Constants.currentlocation.longitude,
+            ),
+            child: TextButton.icon(
+              style: ButtonStyle(
+                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                  backgroundColor:
+                      MaterialStatePropertyAll(Constants.appcolor)),
+              onPressed: () {
+                //open info pop up
+              },
+              icon: const Icon(Icons.location_history),
+              label: Text(Constants.username),
+            )),
+        //extra marker
+        Marker(
+            height: 35,
+            width: 100,
+            point: LatLng(
+              lat,
+              long,
+            ),
+            child: TextButton.icon(
+              style: ButtonStyle(
+                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                  backgroundColor:
+                      MaterialStatePropertyAll(Constants.appcolor)),
+              onPressed: () {
+                //open info pop up
+              },
+              icon: const Icon(Icons.location_history),
+              label: Text(username),
+            ))
+      ];
+    } else {
+      myMarkers = [
+        //me
+        Marker(
+            height: 35,
+            width: 80,
+            point: LatLng(
+              Constants.currentlocation.latitude,
+              Constants.currentlocation.longitude,
+            ),
+            child: TextButton.icon(
+              style: ButtonStyle(
+                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                  backgroundColor:
+                      MaterialStatePropertyAll(Constants.appcolor)),
+              onPressed: () {
+                //open info pop up
+              },
+              icon: const Icon(Icons.location_history),
+              label: Text(Constants.username),
+            )),
+      ];
+    }
     return Scaffold(
       appBar: myappdrawer(context),
       body: FlutterMap(
@@ -29,27 +102,7 @@ class _MapPageState extends State<MapPage> {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.app',
           ),
-          MarkerLayer(markers: [
-            Marker(
-                height: 35,
-                width: 80,
-                point: LatLng(
-                  Constants.currentlocation.latitude,
-                  Constants.currentlocation.longitude,
-                ),
-                child: TextButton.icon(
-                  style: ButtonStyle(
-                      foregroundColor:
-                          const MaterialStatePropertyAll(Colors.white),
-                      backgroundColor:
-                          MaterialStatePropertyAll(Constants.appcolor)),
-                  onPressed: () {
-                    //open info pop up
-                  },
-                  icon: const Icon(Icons.location_history),
-                  label: Text(Constants.username),
-                ))
-          ])
+          MarkerLayer(markers: myMarkers)
         ],
       ),
     );
