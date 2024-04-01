@@ -55,8 +55,9 @@ Future<void> showSOSNotification(String message) async {
         Constants.telephony.sendSms(
             to: t.trusteePhone,
             statusListener: listener,
+            isMultipart: true,
             message:
-                "You received an SOS alert from Ian\nCurrent location is\nGoogle Maps Link \nhttps://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}\nApp Link(if you have finda installed)\nhttps://finda-186e6.web.app/mapPage/Lyon/${Constants.currentlocation.latitude}/${Constants.currentlocation.longitude}/${Constants.currentActivity}/${Constants.previousActivity}/${Constants.currentlocation.speed.toInt().toString()}/${Constants.currentlocation.altitude.toInt().toString()}/${Constants.confidence}");
+                "You received an SOS alert from ${Constants.username}\nCurrent location is\nGoogle Maps Link \nhttps://maps.google.com/?q=${Constants.currentlocation.latitude},${Constants.currentlocation.longitude}\nApp Link(if you have finda installed)\nhttps://finda-186e6.web.app/mapPage/Lyon/${Constants.currentlocation.latitude}/${Constants.currentlocation.longitude}/${Constants.currentActivity}/${Constants.previousActivity}/${Constants.currentlocation.speed.toInt().toString()}/${Constants.currentlocation.altitude.toInt().toString()}/${Constants.confidence}");
       }
     },
   );

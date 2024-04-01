@@ -14,18 +14,26 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   List<Marker> myMarkers = [];
-  var currentActivityIcon;
-  var prevActivityIcon;
+  Map<String, IconData> activityIconMapper = {
+    "still": Icons.attribution,
+    "running": Icons.run_circle_outlined,
+    "bicycle": Icons.bike_scooter,
+    "unknown": Icons.device_unknown,
+    "walking": Icons.directions_walk_outlined,
+    "in vehicle": Icons.car_repair
+  };
 
   @override
   Widget build(BuildContext context) {
     if (GoRouterState.of(context).pathParameters.isNotEmpty) {
       //capture passed params
       String username = GoRouterState.of(context).pathParameters["username"]!;
-      String currActivity =
-          GoRouterState.of(context).pathParameters["currActivity"]!;
-      String prevActivity =
-          GoRouterState.of(context).pathParameters["prevActivity"]!;
+      String currActivity = GoRouterState.of(context)
+          .pathParameters["currActivity"]!
+          .toLowerCase();
+      String prevActivity = GoRouterState.of(context)
+          .pathParameters["prevActivity"]!
+          .toLowerCase();
       String speed = GoRouterState.of(context).pathParameters["speed"]!;
       String altitude = GoRouterState.of(context).pathParameters["altitude"]!;
       String confidence =
@@ -47,15 +55,14 @@ class _MapPageState extends State<MapPage> {
               Constants.currentlocation.longitude,
             ),
             child: TextButton.icon(
-              style: ButtonStyle(
-                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                  backgroundColor:
-                      MaterialStatePropertyAll(Constants.appcolor)),
+              style: const ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(Colors.white),
+                  backgroundColor: MaterialStatePropertyAll(Colors.black)),
               onPressed: () {
                 //open info pop up
               },
               icon: const Icon(Icons.location_history),
-              label: Text(Constants.username),
+              label: Text("${Constants.username} (You)"),
             )),
         //extra marker
         Marker(
@@ -82,23 +89,27 @@ class _MapPageState extends State<MapPage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: Text(
-                              "$username details",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Constants.appcolor,
-                                  fontWeight: FontWeight.bold),
+                            child: Center(
+                              child: Text(
+                                "$username details",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Constants.appcolor,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                           Expanded(
                               child: ListView(children: [
                             ListTile(
-                              leading: Icon(currentActivityIcon),
+                              leading: Icon(activityIconMapper[
+                                  currActivity.toLowerCase()]),
                               title: const Text("Current activity"),
                               trailing: Text(currActivity),
                             ),
                             ListTile(
-                              leading: Icon(prevActivityIcon),
+                              leading: Icon(activityIconMapper[
+                                  prevActivity.toLowerCase()]),
                               title: const Text("Previous activity"),
                               trailing: Text(prevActivity),
                             ),
@@ -110,7 +121,7 @@ class _MapPageState extends State<MapPage> {
                             ListTile(
                               leading: const Icon(Icons.arrow_upward),
                               title: const Text("altitude"),
-                              trailing: Text(altitude),
+                              trailing: Text("$altitude m"),
                             ),
                             ListTile(
                               leading: const Icon(Icons.check_circle),
