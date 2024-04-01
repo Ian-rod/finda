@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:finda/constants/constants.dart';
 import 'package:finda/pages/mydrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -22,10 +25,38 @@ class _MapPageState extends State<MapPage> {
     "walking": Icons.directions_walk_outlined,
     "in vehicle": Icons.car_repair
   };
+  List<LatLng> polylinePoints = [];
+//get route between the two points
+  getroute(String destLat, String destlong) async {
+    try {
+      var uri = Uri.parse(
+          "http://router.project-osrm.org/route/v1/driving/${Constants.currentlocation.latitude},${Constants.currentlocation.longitude};$destLat,$destlong?steps=true&annotations=true&geometries=geojson");
+      var response = await http.get(uri);
+      var routepoints =
+          jsonDecode(response.body)['routes'][0]['geometry']['coordinates'];
+      debugPrint(routepoints.toString());
+      for (int i = 0; i < routepoints.length; i++) {
+        var rep =
+            routepoints[i].toString().replaceAll("[", "").replaceAll("]", "");
 
+        var lat = rep.split(",");
+        var long = rep.split(",");
+        debugPrint("Created points for ${lat[i]},${long[i]}");
+        polylinePoints.add(LatLng(double.parse(lat[i]), double.parse(long[i])));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  double long = 0;
+  double lat = 0;
   @override
   Widget build(BuildContext context) {
     if (GoRouterState.of(context).pathParameters.isNotEmpty) {
+      lat = double.parse(GoRouterState.of(context).pathParameters["latitude"]!);
+      long =
+          double.parse(GoRouterState.of(context).pathParameters["longitude"]!);
       //capture passed params
       String username = GoRouterState.of(context).pathParameters["username"]!;
       String currActivity = GoRouterState.of(context)
@@ -40,10 +71,6 @@ class _MapPageState extends State<MapPage> {
           GoRouterState.of(context).pathParameters["confidence"]!;
       //mapping Icons
 
-      double lat =
-          double.parse(GoRouterState.of(context).pathParameters["latitude"]!);
-      double long =
-          double.parse(GoRouterState.of(context).pathParameters["longitude"]!);
       //create a marker
       myMarkers = [
         //me
@@ -280,13 +307,35 @@ class _MapPageState extends State<MapPage> {
           ),
           initialZoom: 9.2,
         ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
-          ),
-          MarkerLayer(markers: myMarkers)
-        ],
+        children: GoRouterState.of(context).pathParameters.isNotEmpty
+            ? [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                MarkerLayer(markers: myMarkers),
+                PolylineLayer(polylines: [Polyline(points: polylinePoints)])
+              ]
+            : [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                MarkerLayer(markers: myMarkers),
+              ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await getroute(lat.toString(), long.toString());
+          debugPrint("Done plotting waypoints");
+          setState(() {
+            polylinePoints;
+          });
+        },
+        child: const Icon(
+          Icons.route,
+          color: Colors.white,
+        ),
       ),
     );
   }
