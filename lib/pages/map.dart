@@ -60,6 +60,61 @@ class _MapPageState extends State<MapPage> {
                   backgroundColor: MaterialStatePropertyAll(Colors.black)),
               onPressed: () {
                 //open info pop up
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Center(
+                              child: Text(
+                                "${Constants.username} details",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Constants.appcolor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              child: ListView(children: [
+                            ListTile(
+                              leading: Icon(activityIconMapper[
+                                  Constants.currentActivity.toLowerCase()]),
+                              title: const Text("Current activity"),
+                              trailing: Text(Constants.currentActivity),
+                            ),
+                            ListTile(
+                              leading: Icon(activityIconMapper[
+                                  Constants.previousActivity.toLowerCase()]),
+                              title: const Text("Previous activity"),
+                              trailing: Text(Constants.previousActivity),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.speed),
+                              title: const Text("speed"),
+                              trailing: Text(
+                                  "${Constants.currentlocation.speed.toInt().toString()} m/s"),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.arrow_upward),
+                              title: const Text("altitude"),
+                              trailing: Text(
+                                  "${Constants.currentlocation.altitude.toInt().toString()} m"),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.check_circle),
+                              title: const Text("Confidence"),
+                              trailing: Text(Constants.confidence),
+                            )
+                          ]))
+                        ],
+                      );
+                    });
               },
               icon: const Icon(Icons.location_history),
               label: Text("${Constants.username} (You)"),
@@ -154,6 +209,61 @@ class _MapPageState extends State<MapPage> {
                       MaterialStatePropertyAll(Constants.appcolor)),
               onPressed: () {
                 //open info pop up
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Center(
+                              child: Text(
+                                "${Constants.username} details",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Constants.appcolor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              child: ListView(children: [
+                            ListTile(
+                              leading: Icon(activityIconMapper[
+                                  Constants.currentActivity.toLowerCase()]),
+                              title: const Text("Current activity"),
+                              trailing: Text(Constants.currentActivity),
+                            ),
+                            ListTile(
+                              leading: Icon(activityIconMapper[
+                                  Constants.previousActivity.toLowerCase()]),
+                              title: const Text("Previous activity"),
+                              trailing: Text(Constants.previousActivity),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.speed),
+                              title: const Text("speed"),
+                              trailing: Text(
+                                  "${Constants.currentlocation.speed.toInt().toString()} m/s"),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.arrow_upward),
+                              title: const Text("altitude"),
+                              trailing: Text(
+                                  "${Constants.currentlocation.altitude.toInt().toString()} m"),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.check_circle),
+                              title: const Text("Confidence"),
+                              trailing: Text(Constants.confidence),
+                            )
+                          ]))
+                        ],
+                      );
+                    });
               },
               icon: const Icon(Icons.location_history),
               label: Text(Constants.username),
