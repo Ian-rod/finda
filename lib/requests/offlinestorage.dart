@@ -309,7 +309,7 @@ Future<String> saveUsername() async {
     prefs = await SharedPreferences.getInstance();
     var jsonString = jsonEncode(Constants.username);
     await prefs.setString("username", jsonString);
-    returnmessage = "UserName saved";
+    returnmessage = "UserName saved (${Constants.username})";
     debugPrint(returnmessage);
   } catch (e) {
     returnmessage = e.toString();
@@ -325,7 +325,7 @@ getUsername() async {
     if (jsonString != null) {
       Constants.username = json.decode(jsonString);
     }
-    returnmessage = "username fetched successfully";
+    returnmessage = "username fetched successfully (${Constants.username})";
     debugPrint(returnmessage);
   } catch (e) {
     returnmessage = e.toString();

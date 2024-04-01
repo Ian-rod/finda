@@ -1,13 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:finda/constants/constants.dart';
-import 'package:finda/requests/notificationrequests.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 Widget mydrawer(BuildContext context) {
-  var methodchannel = MethodChannel("STKchannel");
   return SafeArea(
     child: Drawer(
       backgroundColor: Constants.appcolor,
@@ -32,7 +31,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to homepage
-                Navigator.pushReplacementNamed(context, "/");
+                context.go("/");
               },
             ),
           ),
@@ -45,7 +44,7 @@ Widget mydrawer(BuildContext context) {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                Navigator.pushReplacementNamed(context, "/locationhistory");
+                context.go("/locationhistory");
               },
             ),
           ),
@@ -59,7 +58,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to geofence page
-                Navigator.pushReplacementNamed(context, "/geofence");
+                context.go("/geofence");
               },
             ),
           ),
@@ -76,7 +75,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to trustee page
-                Navigator.pushReplacementNamed(context, "/trustee");
+                context.go("/trustee");
               },
             ),
           ),
@@ -91,7 +90,7 @@ Widget mydrawer(BuildContext context) {
               onTap: () {
                 //navigate to Distress set up page
 
-                Navigator.pushReplacementNamed(context, "/sosPage");
+                context.go("/sosPage");
               },
             ),
           ),
@@ -105,7 +104,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to flag susupicious set up page
-                Navigator.pushReplacementNamed(context, "/safezone");
+                context.go("/safezone");
               },
             ),
           )
@@ -216,9 +215,11 @@ displayUserNameDialog(BuildContext context) {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               contentPadding: EdgeInsets.only(top: 10),
-              title: Text(
-                "Current username",
-                style: TextStyle(fontSize: 24),
+              title: Center(
+                child: Text(
+                  "Current username",
+                  style: TextStyle(color: Constants.appcolor, fontSize: 24),
+                ),
               ),
               content: SizedBox(
                   height: 200,
@@ -229,15 +230,22 @@ displayUserNameDialog(BuildContext context) {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 80,
+                          radius: 60,
                           child: Icon(
                             Icons.person,
                             size: 50,
+                            color: Constants.appcolor,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Text(Constants.username),
+                          child: Text(
+                            Constants.username,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Constants.appcolor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         )
                       ],
                     ),

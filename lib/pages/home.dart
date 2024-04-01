@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/requests/notificationrequests.dart';
+import 'package:go_router/go_router.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -301,7 +302,7 @@ class _HomeState extends State<Home> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, "/mapPage");
+                      context.go("/mapPage");
                     },
                     child: Card(
                       elevation: 10,

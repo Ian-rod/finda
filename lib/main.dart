@@ -82,12 +82,13 @@ void main() async {
   await getSOSdata();
   await getSOS();
   await getLocationHistoryandStatus();
+  await getUsername();
   //request phone permissions
   await Constants.telephony.requestPhoneAndSmsPermissions;
 
 //turn on/off SOS service
   if (Constants.sosOn) {
-    await showSOSNotification("Click to send a distress Message");
+    await showSOSNotification("Click to send a distress message");
   }
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
@@ -117,9 +118,62 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   //go router config
-
-  runApp(MaterialApp(
-    home: Constants.appHome,
+  final GoRouter router = GoRouter(
+    routes: <RouteBase>[
+      GoRoute(
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) {
+          return Constants.appHome;
+        },
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'geofence',
+            builder: (BuildContext context, GoRouterState state) {
+              return const GeoFence();
+            },
+          ),
+          GoRoute(
+            path: 'safezone',
+            builder: (BuildContext context, GoRouterState state) {
+              return const FlagSusupicious();
+            },
+          ),
+          GoRoute(
+            path: 'trustee',
+            builder: (BuildContext context, GoRouterState state) {
+              return const TrusteePage();
+            },
+          ),
+          GoRoute(
+            path: 'sosPage',
+            builder: (BuildContext context, GoRouterState state) {
+              return const SOSPage();
+            },
+          ),
+          GoRoute(
+            path: 'sosSetup',
+            builder: (BuildContext context, GoRouterState state) {
+              return const SOSsetupPage();
+            },
+          ),
+          GoRoute(
+            path: 'locationhistory',
+            builder: (BuildContext context, GoRouterState state) {
+              return const LocationHistoryPage();
+            },
+          ),
+          GoRoute(
+            path: 'mapPage',
+            builder: (BuildContext context, GoRouterState state) {
+              return const MapPage();
+            },
+          ),
+        ],
+      ),
+    ],
+  );
+  runApp(MaterialApp.router(
+    routerConfig: router,
     title: "Finda",
     theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -130,15 +184,6 @@ void main() async {
             foregroundColor: Colors.white, backgroundColor: Constants.appcolor),
         primarySwatch: colorCustom,
         primaryColor: Constants.appcolor),
-    routes: {
-      "/geofence": (context) => GeoFence(),
-      "/safezone": (context) => FlagSusupicious(),
-      "/trustee": (context) => TrusteePage(),
-      "/sosPage": (context) => SOSPage(),
-      "/sosSetup": (context) => SOSsetupPage(),
-      "/locationhistory": (context) => LocationHistoryPage(),
-      "/mapPage": (context) => MapPage()
-    },
   ));
   //register headless when app is terminated
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
