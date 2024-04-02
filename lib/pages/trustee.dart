@@ -168,7 +168,7 @@ class _TrusteePageState extends State<TrusteePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myappdrawer(context),
+      appBar: myappbar(context),
       drawer: mydrawer(context),
       body: Constants.trusteeList.isNotEmpty
           ? Column(

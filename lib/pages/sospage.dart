@@ -16,7 +16,7 @@ class _SOSPageState extends State<SOSPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myappdrawer(context),
+      appBar: myappbar(context),
       drawer: mydrawer(context),
       body: ListView(
         children: [

@@ -269,7 +269,7 @@ class _HomeState extends State<Home> {
       notificationText: 'Tap to return to the app',
       child: Scaffold(
         drawer: mydrawer(context),
-        appBar: myappdrawer(context),
+        appBar: myappbar(context),
         body: ListView(
           shrinkWrap: true,
           children: [

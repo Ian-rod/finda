@@ -114,7 +114,7 @@ Widget mydrawer(BuildContext context) {
   );
 }
 
-PreferredSizeWidget myappdrawer(BuildContext context) {
+PreferredSizeWidget myappbar(BuildContext context) {
   return AppBar(
     elevation: 10,
     forceMaterialTransparency: true,

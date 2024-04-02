@@ -17,6 +17,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   List<Marker> myMarkers = [];
+  bool createdWaypoints = false;
   Map<String, IconData> activityIconMapper = {
     "still": Icons.attribution,
     "running": Icons.run_circle_outlined,
@@ -28,22 +29,23 @@ class _MapPageState extends State<MapPage> {
   List<LatLng> polylinePoints = [];
 //get route between the two points
   getroute(String destLat, String destlong) async {
+    polylinePoints.clear();
     try {
       var uri = Uri.parse(
           "http://router.project-osrm.org/route/v1/driving/${Constants.currentlocation.latitude},${Constants.currentlocation.longitude};$destLat,$destlong?steps=true&annotations=true&geometries=geojson");
       var response = await http.get(uri);
-      var routepoints =
-          jsonDecode(response.body)['routes'][0]['geometry']['coordinates'];
-      debugPrint(routepoints.toString());
-      for (int i = 0; i < routepoints.length; i++) {
-        var rep =
-            routepoints[i].toString().replaceAll("[", "").replaceAll("]", "");
+      setState(() {
+        var routepoints =
+            jsonDecode(response.body)['routes'][0]['geometry']['coordinates'];
+        for (int i = 0; i < routepoints.length; i++) {
+          var coordinates = routepoints[i];
+          var lat = coordinates[0];
+          var long = coordinates[1];
+          debugPrint("Created points for $lat,$long");
 
-        var lat = rep.split(",");
-        var long = rep.split(",");
-        debugPrint("Created points for ${lat[i]},${long[i]}");
-        polylinePoints.add(LatLng(double.parse(lat[i]), double.parse(long[i])));
-      }
+          polylinePoints.add(LatLng(lat, long));
+        }
+      });
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -298,38 +300,87 @@ class _MapPageState extends State<MapPage> {
       ];
     }
     return Scaffold(
-      appBar: myappdrawer(context),
-      body: FlutterMap(
-        options: MapOptions(
-          initialCenter: LatLng(
-            Constants.currentlocation.latitude,
-            Constants.currentlocation.longitude,
-          ),
-          initialZoom: 9.2,
-        ),
-        children: GoRouterState.of(context).pathParameters.isNotEmpty
-            ? [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.app',
+      appBar: myappbar(context),
+      body: createdWaypoints
+          ? FlutterMap(
+              options: MapOptions(
+                initialCenter: LatLng(
+                  Constants.currentlocation.latitude,
+                  Constants.currentlocation.longitude,
                 ),
-                MarkerLayer(markers: myMarkers),
-                PolylineLayer(polylines: [Polyline(points: polylinePoints)])
-              ]
-            : [
+                initialZoom: 9.2,
+              ),
+              children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.app',
+                  ),
+                  MarkerLayer(markers: myMarkers),
+                  PolylineLayer(polylines: [
+                    Polyline(
+                        points: polylinePoints, borderColor: Constants.appcolor)
+                  ])
+                ])
+          : FlutterMap(
+              options: MapOptions(
+                initialCenter: LatLng(
+                  Constants.currentlocation.latitude,
+                  Constants.currentlocation.longitude,
+                ),
+                initialZoom: 9.2,
+              ),
+              children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.app',
                 ),
                 MarkerLayer(markers: myMarkers),
               ],
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await getroute(lat.toString(), long.toString());
-          debugPrint("Done plotting waypoints");
-          setState(() {
-            polylinePoints;
+          late BuildContext dialogcontext;
+          showDialog(
+              context: context,
+              builder: (context) {
+                dialogcontext = context;
+                return AlertDialog(
+                  title: const Row(children: [
+                    Text("Creating waypoints"),
+                    SizedBox(
+                      width: 7,
+                    ),
+                    Icon(Icons.route)
+                  ]),
+                  content: SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            height: 70,
+                            width: 70,
+                            child: CircularProgressIndicator(
+                              color: Constants.appcolor,
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("Creating route to target"),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
+          await getroute(lat.toString(), long.toString()).then((value) {
+            dialogcontext.pop();
+            setState(() {
+              createdWaypoints = true;
+            });
+            debugPrint("Done plotting waypoints ${polylinePoints.length}");
           });
         },
         child: const Icon(
