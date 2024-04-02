@@ -32,16 +32,15 @@ class _MapPageState extends State<MapPage> {
     polylinePoints.clear();
     try {
       var uri = Uri.parse(
-          "http://router.project-osrm.org/route/v1/driving/${Constants.currentlocation.latitude},${Constants.currentlocation.longitude};$destLat,$destlong?steps=true&annotations=true&geometries=geojson");
+          "http://router.project-osrm.org/route/v1/driving/${Constants.currentlocation.longitude},${Constants.currentlocation.latitude};$destlong,$destLat?steps=true&annotations=true&geometries=geojson&overview=full");
       var response = await http.get(uri);
       setState(() {
         var routepoints =
             jsonDecode(response.body)['routes'][0]['geometry']['coordinates'];
         for (int i = 0; i < routepoints.length; i++) {
           var coordinates = routepoints[i];
-          var lat = coordinates[0];
-          var long = coordinates[1];
-          debugPrint("Created points for $lat,$long");
+          var long = coordinates[0];
+          var lat = coordinates[1];
 
           polylinePoints.add(LatLng(lat, long));
         }
@@ -311,17 +310,19 @@ class _MapPageState extends State<MapPage> {
                 initialZoom: 9.2,
               ),
               children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'com.example.app',
-                  ),
-                  MarkerLayer(markers: myMarkers),
-                  PolylineLayer(polylines: [
-                    Polyline(
-                        points: polylinePoints, borderColor: Constants.appcolor)
-                  ])
-                ])
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                PolylineLayer(polylines: [
+                  Polyline(
+                      borderStrokeWidth: 20,
+                      points: polylinePoints,
+                      borderColor: Constants.appcolor)
+                ]),
+                MarkerLayer(markers: myMarkers),
+              ],
+            )
           : FlutterMap(
               options: MapOptions(
                 initialCenter: LatLng(
@@ -376,6 +377,8 @@ class _MapPageState extends State<MapPage> {
                 );
               });
           await getroute(lat.toString(), long.toString()).then((value) {
+            debugPrint(
+                "Plotting points for $lat,$long to ${Constants.currentlocation.latitude}.${Constants.currentlocation.longitude}");
             dialogcontext.pop();
             setState(() {
               createdWaypoints = true;
