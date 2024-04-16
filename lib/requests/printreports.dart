@@ -210,9 +210,24 @@ getfrequentLocation() async {
           key: (k) => k, value: (k) => mostvisited[k]!);
   try {
     final result = await InternetAddress.lookup('example.com');
+    //create header
+    mostvisitedOutput.add(
+      pw.RichText(
+          text: pw.TextSpan(
+              style: const pw.TextStyle(
+                fontSize: 10.0,
+              ),
+              children: [
+            pw.TextSpan(
+                text: "Most visited places:",
+                style:
+                    pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          ])),
+    );
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       //internet available
-      for (int i = 0; i < sortedMap.length; i++) {
+
+      for (int i = sortedMap.length - 1; i > sortedMap.length - 4; i--) {
         MapEntry<String, int> entry = sortedMap.entries.elementAt(i);
         int commaindex = entry.key.indexOf(",");
         double latitude = double.parse(entry.key.substring(0, commaindex));
@@ -222,55 +237,37 @@ getfrequentLocation() async {
             await placemarkFromCoordinates(latitude, longitude);
         String address =
             "\t\t\t\t\t\tCountry: ${placemarks[0].country}\n\t\t\t\t\t\tLocality: ${placemarks[0].locality}\n\t\t\t\t\t\tStreet: ${placemarks[0].street}";
-
         //build output widget
         mostvisitedOutput.add(
           pw.RichText(
               text: pw.TextSpan(
                   style: const pw.TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 14.0,
                   ),
                   children: [
-                pw.TextSpan(
-                    text: "\nMost visited places:",
-                    style: pw.TextStyle(
-                        fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.TextSpan(text: "\n$address"),
+                pw.TextSpan(text: address),
               ])),
         );
+
         mostvisitedOutput.add(
           pw.RichText(
               text: pw.TextSpan(
                   style: const pw.TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 14.0,
                   ),
                   children: [
                 pw.TextSpan(
-                    text: "\nLatitude,Longitude:",
+                    text: "Frequency:",
                     style: pw.TextStyle(
-                        fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.TextSpan(text: "\n\t\t\t\t\t\t${entry.key}"),
-              ])),
-        );
-        mostvisitedOutput.add(
-          pw.RichText(
-              text: pw.TextSpan(
-                  style: const pw.TextStyle(
-                    fontSize: 16.0,
-                  ),
-                  children: [
-                pw.TextSpan(
-                    text: "\nFrequency:",
-                    style: pw.TextStyle(
-                        fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.TextSpan(text: "\n\t\t\t\t\t\t${entry.value.toString()}")
+                        fontSize: 14, fontWeight: pw.FontWeight.bold)),
+                pw.TextSpan(text: "\t\t${entry.value.toString()}\n\n\n")
               ])),
         );
       }
     }
   } on SocketException catch (_) {
     //internet unavailable
-    for (int i = 0; i < sortedMap.length; i++) {
+    for (int i = sortedMap.length - 1; i > sortedMap.length - 4; i--) {
       MapEntry<String, int> entry = sortedMap.entries.elementAt(i);
       String address = "address unavailable due to lack of internet";
 
@@ -282,39 +279,35 @@ getfrequentLocation() async {
                   fontSize: 16.0,
                 ),
                 children: [
-              pw.TextSpan(
-                  text: "\nMost visited places:",
-                  style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
-              pw.TextSpan(text: "\n$address"),
+              pw.TextSpan(text: address),
             ])),
       );
       mostvisitedOutput.add(
         pw.RichText(
             text: pw.TextSpan(
                 style: const pw.TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
                 children: [
               pw.TextSpan(
                   text: "\nLatitude,Longitude:",
                   style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
-              pw.TextSpan(text: "\n\t\t\t\t\t\t${entry.key}"),
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.TextSpan(text: "\t\t\t${entry.key}"),
             ])),
       );
       mostvisitedOutput.add(
         pw.RichText(
             text: pw.TextSpan(
                 style: const pw.TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
                 children: [
               pw.TextSpan(
-                  text: "\nFrequency:",
+                  text: "Frequency:",
                   style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
-              pw.TextSpan(text: "\n\t\t\t\t\t\t${entry.value.toString()}")
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.TextSpan(text: "\t\t${entry.value.toString()}\n\n\n")
             ])),
       );
     }

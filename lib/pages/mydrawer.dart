@@ -31,7 +31,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to homepage
-                context.go("/");
+                context.pushReplacement("/");
               },
             ),
           ),
@@ -44,7 +44,7 @@ Widget mydrawer(BuildContext context) {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                context.go("/locationhistory");
+                context.pushReplacement("/locationhistory");
               },
             ),
           ),
@@ -58,7 +58,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to geofence page
-                context.go("/geofence");
+                context.pushReplacement("/geofence");
               },
             ),
           ),
@@ -75,7 +75,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to trustee page
-                context.go("/trustee");
+                context.pushReplacement("/trustee");
               },
             ),
           ),
@@ -90,7 +90,7 @@ Widget mydrawer(BuildContext context) {
               onTap: () {
                 //navigate to Distress set up page
 
-                context.go("/sosPage");
+                context.pushReplacement("/sosPage");
               },
             ),
           ),
@@ -104,7 +104,7 @@ Widget mydrawer(BuildContext context) {
               ),
               onTap: () {
                 //navigate to flag susupicious set up page
-                context.go("/safezone");
+                context.pushReplacement("/safezone");
               },
             ),
           )
