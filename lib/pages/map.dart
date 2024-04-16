@@ -24,7 +24,7 @@ class _MapPageState extends State<MapPage> {
     "bicycle": Icons.bike_scooter,
     "unknown": Icons.device_unknown,
     "walking": Icons.directions_walk_outlined,
-    "in vehicle": Icons.car_repair
+    "in_vehicle": Icons.car_repair
   };
   List<LatLng> polylinePoints = [];
 //get route between the two points

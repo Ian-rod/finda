@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
       Constants.confidence = confidence;
     } else {
       activityIcon = Icons.car_repair;
-      currentActivity = "In vehicle";
+      currentActivity = "in_vehicle";
       Constants.currentActivity = currentActivity;
       previousActivity = prevActivity.type.name;
       Constants.previousActivity = previousActivity;
