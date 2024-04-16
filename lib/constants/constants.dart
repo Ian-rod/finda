@@ -48,4 +48,7 @@ class Constants {
 
   //User name
   static String username = "User";
+
+  //disclaimer alert
+  static bool shown = false;
 }

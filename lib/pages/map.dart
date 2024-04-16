@@ -54,6 +54,11 @@ class _MapPageState extends State<MapPage> {
   double lat = 0;
   @override
   Widget build(BuildContext context) {
+    if (!Constants.shown) {
+      Future.delayed(Duration.zero, () => termsDialog(context));
+      Constants.shown = !Constants.shown;
+    }
+
     if (GoRouterState.of(context).pathParameters.isNotEmpty) {
       lat = double.parse(GoRouterState.of(context).pathParameters["latitude"]!);
       long =
@@ -393,4 +398,75 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+}
+
+//internet usage alert
+termsDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              title: Row(
+                children: [
+                  const Text(
+                    "Before you proceed",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                        Icon(Icons.wifi, size: 30, color: Constants.appcolor),
+                  )
+                ],
+              ),
+              content: SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Column(
+                    children: [
+                      ListView(
+                          padding: const EdgeInsets.all(10),
+                          shrinkWrap: true,
+                          children: [
+                            RichText(
+                              text: const TextSpan(
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: "This service uses internet",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                          ]),
+                      //I understand button
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextButton(
+                            style: ButtonStyle(
+                                foregroundColor: const MaterialStatePropertyAll(
+                                    Colors.white),
+                                backgroundColor: MaterialStatePropertyAll(
+                                    Constants.appcolor),
+                                fixedSize: const MaterialStatePropertyAll(
+                                    Size(250, 50)),
+                                shape: MaterialStateProperty.all<StadiumBorder>(
+                                    const StadiumBorder())),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("I understand")),
+                      )
+                    ],
+                  ))),
+        );
+      });
 }
