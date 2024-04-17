@@ -7,6 +7,7 @@ import 'package:finda/requests/backgroundservices.dart';
 import 'package:finda/requests/basicfunctionalityrequests.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:finda/constants/geoconstants.dart';
 import 'package:finda/requests/notificationrequests.dart';
@@ -186,9 +187,15 @@ class _HomeState extends State<Home> {
           "minLat": limitlist[0]
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                "Please set a safezone to flag activities outside your safezone")));
+        Fluttertoast.showToast(
+            msg:
+                "Please set a safezone to flag activities outside your safezone",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Constants.appcolor,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } else {
       //switch off Suspicious flag

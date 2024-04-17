@@ -51,4 +51,7 @@ class Constants {
 
   //disclaimer alert
   static bool shown = false;
+
+  //email credentials
+  static String gmailpass = "gvfipqsxqwjzxeha";
 }

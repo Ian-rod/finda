@@ -5,6 +5,7 @@ import 'package:finda/pages/mydrawer.dart';
 import 'package:finda/requests/offlinestorage.dart';
 import 'package:finda/requests/printreports.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import '../requests/backgroundservices.dart';
 
@@ -191,8 +192,14 @@ class _LocationHistoryPageState extends State<LocationHistoryPage> {
                                 MaterialStatePropertyAll(Constants.appcolor)),
                         onPressed: () async {
                           await printReport().then((value) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(value)));
+                            Fluttertoast.showToast(
+                                msg: value,
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Constants.appcolor,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
                           });
                         },
                         icon: const Icon(Icons.print),
